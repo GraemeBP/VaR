@@ -8,7 +8,7 @@ def BSCall(S, K, T, Sigma, d, r):
         The formula can be found here: https://en.wikipedia.org/wiki/Black%E2%80%93Scholes_model
 
     :function si.norm.cdf: The cumulative distribution function of the standard normal distribution
-    :param S:       Stock price
+    :param S:       Stock price of the underlying security
     :param K:       The strike price of the option, also frequently called exercise price.
     :param T:       Time to maturity in years.
     :param Sigma:   The volatility of returns of the underlying asset
