@@ -12,9 +12,9 @@ def BSCall(S, K, T, Sigma, d, r):
     :param K:       The strike price of the option, also frequently called exercise price.
     :param T:       Time to maturity in years.
     :param Sigma:   The volatility of returns of the underlying asset
-    :param d:
+    :param d:       The dividend yield. An annual rate, expressed in terms of continuous compounding.
     :param r:       The risk free rate. An annual rate, expressed in terms of continuous compounding.
-    :return:
+    :return:        The price of a European call option via the Black Scholes Model
     """
     d1 = (np.log(S / K) + (r - d + 0.5*Sigma**2)*T) / (np.sqrt(T)*Sigma)
     d2 = (np.log(S / K) + (r - d - 0.5*Sigma**2)*T) / (np.sqrt(T)*Sigma)
@@ -27,5 +27,5 @@ def BSPut(S, K, T, Sigma, d, r):
     d1 = (np.log(S / K) + (r - d + 0.5*Sigma**2)*T) / (np.sqrt(T)*Sigma)
     d2 = (np.log(S / K) + (r - d - 0.5*Sigma**2)*T) / (np.sqrt(T)*Sigma)
 
-    put = (K * np.exp(-r * T) * si.norm.cdf(-d2, 0.0, 1.0)) - (S * np.exp(-d*T) * si.norm.cdf(-d1, 0.0, 1.0))
-    return put
+    put_price = (K * np.exp(-r * T) * si.norm.cdf(-d2, 0.0, 1.0)) - (S * np.exp(-d*T) * si.norm.cdf(-d1, 0.0, 1.0))
+    return put_price
