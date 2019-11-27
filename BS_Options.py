@@ -56,8 +56,9 @@ class BlackScholes():
 
     def greek_delta(self, option_type):
         """
-        Delta is a measure of the change in an option's price resulting from a change in the underlying asset
-
+        :param option_type: this is either "call" or "put"
+        :return: Delta which is a measure of the change in an option's price resulting from a change in the
+        underlying asset
         """
         if option_type == "call":
             d1 = (np.log(self.s / self.k) + (self.r - self.d + 0.5 * self.sigma ** 2) * self.t) / (
@@ -74,8 +75,8 @@ class BlackScholes():
 
     def greek_gamma(self, option_type):
         """
-        Gamma measures delta's rate of change
-
+        :param option_type: this is either "call" or "put"
+        :return: Gamma which measures delta's rate of change
         """
         if option_type == "call":
             d1 = (np.log(self.s / self.k) + (self.r - self.d + 0.5 * self.sigma ** 2) * self.t) / (
@@ -89,8 +90,24 @@ class BlackScholes():
 
         return gamma
 
+    def greek_vega(self, option_type):
+        """
+        :param option_type: this is either "call" or "put"
+        :return: Vega which Measures Impact of a Change in Volatility
+        """
+        if option_type == "call":
+            d1 = (np.log(self.s / self.k) + (self.r - self.d + 0.5 * self.sigma ** 2) * self.t) / (
+                        np.sqrt(self.t) * self.sigma)
 
+        elif option_type == "put":
+            d1 = (np.log(self.s / self.k) + (self.r - self.d + 0.5 * self.sigma ** 2) * self.t) / (
+                        np.sqrt(self.t) * self.sigma)
 
+        vega = self.s * si.norm.pdf(d1) * np.sqrt(self.t)
+
+        return vega
+
+    
 
 
 
