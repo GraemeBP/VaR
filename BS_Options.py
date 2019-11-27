@@ -55,18 +55,40 @@ class BlackScholes():
         return put_price
 
     def greek_delta(self, option_type):
+        """
+        Delta is a measure of the change in an option's price resulting from a change in the underlying asset
+
+        """
         if option_type == "call":
             d1 = (np.log(self.s / self.k) + (self.r - self.d + 0.5 * self.sigma ** 2) * self.t) / (
                         np.sqrt(self.t) * self.sigma)
 
-            delta = si.norm.cdf(d1, 0.0, 1.0)
+            delta = si.norm.cdf(d1)
 
         elif option_type == "put":
             d1 = (np.log(self.s / self.k) + (self.r - self.d + 0.5 * self.sigma ** 2) * self.t) / (
                         np.sqrt(self.t) * self.sigma)
-            delta = si.norm.cdf(d1, 0.0, 1.0)-1
+            delta = si.norm.cdf(d1)-1
 
         return delta
+
+    def greek_gamma(self, option_type):
+        """
+        Gamma measures delta's rate of change
+
+        """
+        if option_type == "call":
+            d1 = (np.log(self.s / self.k) + (self.r - self.d + 0.5 * self.sigma ** 2) * self.t) / (
+                        np.sqrt(self.t) * self.sigma)
+
+        elif option_type == "put":
+            d1 = (np.log(self.s / self.k) + (self.r - self.d + 0.5 * self.sigma ** 2) * self.t) / (
+                        np.sqrt(self.t) * self.sigma)
+
+        gamma = si.norm.pdf(d1)/(self.s * self.sigma * np.sqrt(self.t))
+
+        return gamma
+
 
 
 
