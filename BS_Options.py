@@ -12,7 +12,7 @@ class BlackScholes():
         self.d = d
         self.r = r
 
-    def bscall(self):
+    def european_call(self):
         """
         Calculate European Call Price based on the Black-Scholes models:
             The formula can be found here: https://en.wikipedia.org/wiki/Black%E2%80%93Scholes_model
@@ -33,7 +33,7 @@ class BlackScholes():
                       - self.k * np.exp(-self.r * self.t) * si.norm.cdf(d2, 0.0, 1.0))
         return call_price
 
-    def bsput(self):
+    def european_put(self):
         """
         Calculate European Put Price based on the Black-Scholes models:
             The formula can be found here: https://en.wikipedia.org/wiki/Black%E2%80%93Scholes_model
@@ -53,3 +53,23 @@ class BlackScholes():
         put_price = (self.k * np.exp(-self.r * self.t) * si.norm.cdf(-d2, 0.0, 1.0)) \
                     - (self.s * np.exp(-self.d*self.t) * si.norm.cdf(-d1, 0.0, 1.0))
         return put_price
+
+    def greek_delta(self, option_type):
+        if option_type == "call":
+            d1 = (np.log(self.s / self.k) + (self.r - self.d + 0.5 * self.sigma ** 2) * self.t) / (
+                        np.sqrt(self.t) * self.sigma)
+
+            delta = si.norm.cdf(d1, 0.0, 1.0)
+
+        elif option_type == "put":
+            d1 = (np.log(self.s / self.k) + (self.r - self.d + 0.5 * self.sigma ** 2) * self.t) / (
+                        np.sqrt(self.t) * self.sigma)
+            delta = si.norm.cdf(d1, 0.0, 1.0)-1
+
+        return delta
+
+
+
+
+
+
