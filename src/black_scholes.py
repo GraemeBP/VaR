@@ -121,3 +121,18 @@ class BlackScholes():
         elif option_type == "put":
             rho = -self.k * self.t * np.exp(-self.r * self.t) * si.norm.cdf(-self.d2_european_call())
         return rho
+
+    def greek_theta(self, option_type):
+        if option_type == "call":
+            theta = (-np.exp(-self.d * self.t)) * (self.s * si.norm.pdf(self.d1_european_call()) * self.sigma) / \
+                    2 * np.sqrt(self.t) \
+                    - self.r * self.k * (np.exp(-self.r * self.t)) * si.norm.cdf(self.d2_european_call()) \
+                    + self.d * self.s * (np.exp(-self.d * self.t)) * si.norm.cdf(self.d1_european_call())
+
+        elif option_type == "put":
+            theta = (-np.exp(-self.d * self.t)) * (self.s * si.norm.pdf(self.d1_european_put()) * self.sigma) / \
+                    2 * np.sqrt(self.t) \
+                    + self.r * self.k * (np.exp(-self.r * self.t)) * si.norm.cdf(- self.d2_european_put()) \
+                    - self.d * self.s * (np.exp(-self.d * self.t)) * si.norm.cdf(- self.d1_european_put())
+
+        return theta
