@@ -1,4 +1,6 @@
 import numpy as np
+import scipy.integrate as integrate
+import scipy.pi as pi
 
 class HestonModel():
 
@@ -24,8 +26,8 @@ class HestonModel():
         self.sigma = sigma
         self.rho = rho
 
-    def charachteristic_function(self):
-        if j==1:
+    def characteristic_function(self, j, phi):
+        if j == 1:
             u = 0.5
             b = self.kappa + self.lambd - self.rho * self.sigma
         else:
@@ -34,19 +36,33 @@ class HestonModel():
 
         a = (self.kappa * self.theta)
 
-        d = np.sqrt((self.rho * self.sigma * self.phi - b)**2 - (self.sigma**2) * (2 * u * self.phi * - self.phi**2))
-        g = (b - (self.rho * self.sigma * self.phi) + d) / (b - (self.rho * self.sigma * self.phi) - d)
+        d = np.sqrt((self.rho * self.sigma * phi - b)**2 - (self.sigma**2) * (2 * u * phi * - phi**2))
+        g = (b - (self.rho * self.sigma * phi) + d) / (b - (self.rho * self.sigma * phi) - d)
 
-        c = self.r * self.PHI * self.t \
-            + (a / (self.v**2)) * (b - self.rho * self.sigma * self.PHI + d)*self.t \
+        c = self.r * phi * self.t \
+            + (a / (self.v**2)) * (b - self.rho * self.sigma * self.phi + d)*self.t \
             - 2 * np.log(1 - g * np.exp(d * self.t) / (1-g))
 
-        d = ((b - self.rho * self.sigma * self.phi + d)/(self.sigma**2)) * ((1-np.exp(d * self.t)) / 1 - g * np.exp(d * self.t))
+        d = ((b - self.rho * self.sigma * phi + d)/(self.sigma**2)) * ((1-np.exp(d * self.t)) / 1 - g * np.exp(d * self.t))
 
-        f = np.exp(c + d + self.phi * self.s)
+        f = np.exp(c + d + phi * self.s)
 
         return f
 
+    def probability_function(self, f, phi):
+        integrand = np.real(((np.exp(-phi * np.log(self.k))) * f)/phi)
+        integrated = integrate.quad(integrand,0,np.inf)
+
+        p = 0.5 * (1/pi) * integrated
+        return p
+
+    def european_call(self):
+        call_price = self.t * (self.probability_function(1, phi)) - self.k * np.exp(-self.r * self.t) * (self.probability_function(2, phi))
+        return call_price
+
+    def european_put(self):
+        put_price = - self.t * (self.probability_function(1, phi)) + self.k * np.exp(-self.r * self.t) * (self.probability_function(2, phi))
+        return put_price
 
 
 
