@@ -29,7 +29,7 @@ class HestonModel():
     def characteristic_function(self, j, phi):
         if j == 1:
             u = 0.5
-            b = self.kappa + self.lambd - self.rho * self.sigma
+            b = self.kappa - self.rho * self.sigma
         else:
             u = -0.5
             b = self.kappa
@@ -40,7 +40,7 @@ class HestonModel():
         g = (b - (self.rho * self.sigma * phi) + d) / (b - (self.rho * self.sigma * phi) - d)
 
         c = self.r * phi * self.t \
-            + (a / (self.v**2)) * (b - self.rho * self.sigma * self.phi + d)*self.t \
+            + (a / (self.v**2)) * (b - self.rho * self.sigma * phi + d)*self.t \
             - 2 * np.log(1 - g * np.exp(d * self.t) / (1-g))
 
         d = ((b - self.rho * self.sigma * phi + d)/(self.sigma**2)) * ((1-np.exp(d * self.t)) / 1 - g * np.exp(d * self.t))
@@ -49,19 +49,26 @@ class HestonModel():
 
         return f
 
-    def probability_function(self, f, phi):
+    def integrand(self, j, phi):
+
+        f = self.characteristic_function(j, phi)
+
         integrand = np.real(((np.exp(-phi * np.log(self.k))) * f)/phi)
-        integrated = integrate.quad(integrand,0,np.inf)
+        return integrand
+
+    def probability_function(self, j):
+
+        integrated = integrate.quad(self.integrand, 0, np.inf, args=j)
 
         p = 0.5 * (1/pi) * integrated
         return p
 
     def european_call(self):
-        call_price = self.t * (self.probability_function(1, phi)) - self.k * np.exp(-self.r * self.t) * (self.probability_function(2, phi))
+        call_price = self.t * (self.probability_function(1)) - self.k * np.exp(-self.r * self.t) * (self.probability_function(2))
         return call_price
 
     def european_put(self):
-        put_price = - self.t * (self.probability_function(1, phi)) + self.k * np.exp(-self.r * self.t) * (self.probability_function(2, phi))
+        put_price = - self.t * (self.probability_function(1, phi)) + self.k * (self.probability_function(2, phi))
         return put_price
 
 
