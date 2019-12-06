@@ -36,36 +36,36 @@ class HestonModel():
 
         a = (self.kappa * self.theta)
 
-        d = np.sqrt((self.rho * self.sigma * phi * complex(0, 1) - b)**2
-                    - (self.sigma**2) * (2 * u * phi * complex(0, 1) - phi**2))
-        g = (b - (self.rho * self.sigma * phi * complex(0, 1)) + d) / \
-            (b - (self.rho * self.sigma * phi*complex(0, 1)) - d)
+        d = np.sqrt((self.rho * self.sigma * phi * complex(0, 1) - b)**2 - (self.sigma  **2) * (2 * u * phi * complex(0, 1) - phi**2))
+        g = (b - (self.rho * self.sigma * phi * complex(0, 1)) - d) / (b - (self.rho * self.sigma * phi*complex(0, 1)) + d)
+        # should be + d / -d. testing with the opposite
 
         c = self.r * phi*complex(0, 1) * self.t \
-            + (a / (self.v**2)) * (b - self.rho * self.sigma * phi*complex(0, 1) + d)*self.t \
-            - 2 * np.log(1 - g * np.exp(d * self.t) / (1-g))
+            + (a / (self.v**2)) * (b - self.rho * self.sigma * phi*complex(0, 1) - d)*self.t \
+            - 2 * np.log(1 - g * np.exp(-d * self.t) / (1-g))
 
-        dd = ((b - self.rho * self.sigma * phi*complex(0, 1) + d)/(self.sigma**2)) * ((1-np.exp(d * self.t)) / 1 - g * np.exp(d * self.t))
+        dd = ((b - self.rho * self.sigma * phi*complex(0, 1) - d)/(self.sigma**2)) * ((1-np.exp(-d * self.t)) / 1 - g * np.exp(-d * self.t))
 
-        f = np.exp(c + dd + phi*complex(0, 1) * self.s)
+        x = np.log(self.s)
+        f = np.exp(c + dd * self.v + complex(0, 1)*phi*x)
 
         return f
 
     def integrand(self, j, phi):
 
-        f = self.characteristic_function(j, phi)
+        f = self.characteristic_function(j=j, phi=phi)
 
         integrand = np.real(((np.exp(-phi*complex(0, 1) * np.log(self.k))) * f)/phi*complex(0, 1))
 
-        return integrand[0]
+        return integrand
 
     def probability_function(self, j):
 
-        integrated = integrate.quad(self.integrand, 0, 10, args=j)
+        integrated = integrate.quad(self.integrand, 0, np.inf, args=j)
         # integrate.quad(self.integrand, lower limit, upper limit, args= extra arguments to pass through function )
         print("integrated")
         print(integrated)
-        p = 0.5 * (1/pi) * integrated
+        p = 0.5 * (1/pi) * integrated[0]
         return p
 
     def european_call(self):
