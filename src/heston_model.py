@@ -73,10 +73,11 @@ class HestonModel():
         return call_price
 
     def european_put(self):
-        put_price = - self.t * (self.probability_function(1, phi)) + self.k * (self.probability_function(2, phi))
+        put_price = - self.t * (self.probability_function(1)) + self.k * (self.probability_function(2))
         return put_price
 
 
 hest = HestonModel(s=154.08, k=147, t=1/365 ,v=0.0105 ,r=0.1, theta=0.0837, kappa=74.32, sigma=3.4532, rho=-0.8912)
 
 hest.european_call()
+hest.european_put()
