@@ -1,6 +1,6 @@
 import numpy as np
 import scipy.integrate as integrate
-import scipy.pi as pi
+from scipy import pi
 
 class HestonModel():
 
@@ -36,16 +36,18 @@ class HestonModel():
 
         a = (self.kappa * self.theta)
 
-        d = np.sqrt((self.rho * self.sigma * phi - b)**2 - (self.sigma**2) * (2 * u * phi * - phi**2))
-        g = (b - (self.rho * self.sigma * phi) + d) / (b - (self.rho * self.sigma * phi) - d)
+        d = np.sqrt((self.rho * self.sigma * phi * complex(0, 1) - b)**2
+                    - (self.sigma**2) * (2 * u * phi * complex(0, 1) - phi**2))
+        g = (b - (self.rho * self.sigma * phi * complex(0, 1)) + d) / \
+            (b - (self.rho * self.sigma * phi*complex(0, 1)) - d)
 
-        c = self.r * phi * self.t \
-            + (a / (self.v**2)) * (b - self.rho * self.sigma * phi + d)*self.t \
+        c = self.r * phi*complex(0, 1) * self.t \
+            + (a / (self.v**2)) * (b - self.rho * self.sigma * phi*complex(0, 1) + d)*self.t \
             - 2 * np.log(1 - g * np.exp(d * self.t) / (1-g))
 
-        d = ((b - self.rho * self.sigma * phi + d)/(self.sigma**2)) * ((1-np.exp(d * self.t)) / 1 - g * np.exp(d * self.t))
+        dd = ((b - self.rho * self.sigma * phi*complex(0, 1) + d)/(self.sigma**2)) * ((1-np.exp(d * self.t)) / 1 - g * np.exp(d * self.t))
 
-        f = np.exp(c + d + phi * self.s)
+        f = np.exp(c + dd + phi*complex(0, 1) * self.s)
 
         return f
 
@@ -53,13 +55,16 @@ class HestonModel():
 
         f = self.characteristic_function(j, phi)
 
-        integrand = np.real(((np.exp(-phi * np.log(self.k))) * f)/phi)
-        return integrand
+        integrand = np.real(((np.exp(-phi*complex(0, 1) * np.log(self.k))) * f)/phi*complex(0, 1))
+
+        return integrand[0]
 
     def probability_function(self, j):
 
-        integrated = integrate.quad(self.integrand, 0, np.inf, args=j)
-
+        integrated = integrate.quad(self.integrand, 0, 10, args=j)
+        # integrate.quad(self.integrand, lower limit, upper limit, args= extra arguments to pass through function )
+        print("integrated")
+        print(integrated)
         p = 0.5 * (1/pi) * integrated
         return p
 
@@ -72,4 +77,6 @@ class HestonModel():
         return put_price
 
 
+hest = HestonModel(s=154.08, k=147, t=1/365 ,v=0.0105 ,r=0.1, theta=0.0837, kappa=74.32, sigma=3.4532, rho=-0.8912)
 
+hest.european_call()
