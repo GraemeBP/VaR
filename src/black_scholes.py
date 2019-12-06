@@ -1,3 +1,4 @@
+
 import numpy as np
 import scipy.stats as si
 
@@ -11,6 +12,25 @@ class BlackScholes():
         self.sigma = sigma
         self.d = d
         self.r = r
+
+    def d1_european_call(self):
+        d1 = (np.log(self.s / self.k) + (self.r - self.d + 0.5 * self.sigma ** 2) * self.t) / (
+                np.sqrt(self.t) * self.sigma)
+        return d1
+
+    def d1_european_put(self):
+        d1 = (np.log(self.s / self.k) + (self.r - self.d + 0.5 * self.sigma**2) * self.t) /\
+             (np.sqrt(self.t) * self.sigma)
+        return d1
+
+    def d2_european_call(self):
+        d2 = (np.log(self.s / self.k) + (self.r - self.d - 0.5* self.sigma**2) *self.t) / (np.sqrt(self.t) * self.sigma)
+        return d2
+
+    def d2_european_put(self):
+        d2 = (np.log(self.s / self.k) + (self.r - self.d - 0.5 * self.sigma**2) * self.t) / \
+             (np.sqrt(self.t) * self.sigma)
+        return d2
 
     def european_call(self):
         """
@@ -26,11 +46,8 @@ class BlackScholes():
         :param r:       The risk free rate. An annual rate, expressed in terms of continuous compounding.
         :return:        The price of a European call option via the Black Scholes Model
         """
-        d1 = (np.log(self.s / self.k) + (self.r - self.d + 0.5*self.sigma**2)*self.t) / (np.sqrt(self.t)*self.sigma)
-        d2 = (np.log(self.s / self.k) + (self.r - self.d - 0.5*self.sigma**2)*self.t) / (np.sqrt(self.t)*self.sigma)
-
-        call_price = (self.s * np.exp(-self.d*self.t) * si.norm.cdf(d1, 0.0, 1.0)
-                      - self.k * np.exp(-self.r * self.t) * si.norm.cdf(d2, 0.0, 1.0))
+        call_price = (self.s * np.exp(-self. d * self.t) * si.norm.cdf(self.d1_european_call())
+                      - self.k * np.exp(-self.r * self.t) * si.norm.cdf(self.d2_european_call()))
         return call_price
 
     def european_put(self):
@@ -47,11 +64,9 @@ class BlackScholes():
         :param r:       The risk free rate. An annual rate, expressed in terms of continuous compounding.
         :return:        The price of a European put option via the Black Scholes Model
         """
-        d1 = (np.log(self.s / self.k) + (self.r - self.d + 0.5*self.sigma**2)*self.t) / (np.sqrt(self.t)*self.sigma)
-        d2 = (np.log(self.s / self.k) + (self.r - self.d - 0.5*self.sigma**2)*self.t) / (np.sqrt(self.t)*self.sigma)
 
-        put_price = (self.k * np.exp(-self.r * self.t) * si.norm.cdf(-d2, 0.0, 1.0)) \
-                    - (self.s * np.exp(-self.d*self.t) * si.norm.cdf(-d1, 0.0, 1.0))
+        put_price = (self.k * np.exp(-self.r * self.t) * si.norm.cdf(-self.d2_european_put())) \
+                    - (self.s * np.exp(-self. d * self.t) * si.norm.cdf(-self.d1_european_put()))
         return put_price
 
     def greek_delta(self, option_type):
@@ -59,17 +74,14 @@ class BlackScholes():
         :param option_type: this is either "call" or "put"
         :return: Delta which is a measure of the change in an option's price resulting from a change in the
         underlying asset
+
+        It can be interpreted as the probability of the option expiring in the money.
         """
         if option_type == "call":
-            d1 = (np.log(self.s / self.k) + (self.r - self.d + 0.5 * self.sigma ** 2) * self.t) / (
-                        np.sqrt(self.t) * self.sigma)
-
-            delta = si.norm.cdf(d1)
+            delta = si.norm.cdf(self.d1_european_call())
 
         elif option_type == "put":
-            d1 = (np.log(self.s / self.k) + (self.r - self.d + 0.5 * self.sigma ** 2) * self.t) / (
-                        np.sqrt(self.t) * self.sigma)
-            delta = si.norm.cdf(d1)-1
+            delta = si.norm.cdf(self.d1_european_put()) - 1
 
         return delta
 
@@ -79,14 +91,12 @@ class BlackScholes():
         :return: Gamma which measures delta's rate of change
         """
         if option_type == "call":
-            d1 = (np.log(self.s / self.k) + (self.r - self.d + 0.5 * self.sigma ** 2) * self.t) / (
-                        np.sqrt(self.t) * self.sigma)
+            d1 = self.d1_european_call()
 
         elif option_type == "put":
-            d1 = (np.log(self.s / self.k) + (self.r - self.d + 0.5 * self.sigma ** 2) * self.t) / (
-                        np.sqrt(self.t) * self.sigma)
+            d1 = self.d1_european_put()
 
-        gamma = si.norm.pdf(d1)/(self.s * self.sigma * np.sqrt(self.t))
+        gamma = si.norm.pdf(d1) / (self.s * self.sigma * np.sqrt(self.t))
 
         return gamma
 
@@ -96,19 +106,33 @@ class BlackScholes():
         :return: Vega which Measures Impact of a Change in Volatility
         """
         if option_type == "call":
-            d1 = (np.log(self.s / self.k) + (self.r - self.d + 0.5 * self.sigma ** 2) * self.t) / (
-                        np.sqrt(self.t) * self.sigma)
+            d1 = self.d1_european_call()
 
         elif option_type == "put":
-            d1 = (np.log(self.s / self.k) + (self.r - self.d + 0.5 * self.sigma ** 2) * self.t) / (
-                        np.sqrt(self.t) * self.sigma)
+            d1 = self.d1_european_put()
 
         vega = self.s * si.norm.pdf(d1) * np.sqrt(self.t)
-
         return vega
 
-    
+    def greek_rho(self, option_type):
+        if option_type == "call":
+            rho = self.k * self.t * np.exp(-self. r * self.t) * si.norm.cdf(self.d2_european_call())
 
+        elif option_type == "put":
+            rho = -self.k * self.t * np.exp(-self.r * self.t) * si.norm.cdf(-self.d2_european_call())
+        return rho
 
+    def greek_theta(self, option_type):
+        if option_type == "call":
+            theta = (-np.exp(-self.d * self.t)) * (self.s * si.norm.pdf(self.d1_european_call()) * self.sigma) / \
+                    2 * np.sqrt(self.t) \
+                    - self.r * self.k * (np.exp(-self.r * self.t)) * si.norm.cdf(self.d2_european_call()) \
+                    + self.d * self.s * (np.exp(-self.d * self.t)) * si.norm.cdf(self.d1_european_call())
 
+        elif option_type == "put":
+            theta = (-np.exp(-self.d * self.t)) * (self.s * si.norm.pdf(self.d1_european_put()) * self.sigma) / \
+                    2 * np.sqrt(self.t) \
+                    + self.r * self.k * (np.exp(-self.r * self.t)) * si.norm.cdf(- self.d2_european_put()) \
+                    - self.d * self.s * (np.exp(-self.d * self.t)) * si.norm.cdf(- self.d1_european_put())
 
+        return theta
