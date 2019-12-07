@@ -10,9 +10,9 @@ class HestonModel():
         :param t: time to maturity in years
         :param v: volatility
         :param r: risk free rate
-        :param theta: long run average volatility
+        :param theta: long run average volatility (vbar)
         :param kappa: mean reversion (speed) of variance to long run average
-        :param sigma: volatility of volatility
+        :param sigma: volatility of volatility (vvol)
         :param rho: correlation between the brownian motion of the stock price and the volatility.
         """
         self.s = s
@@ -128,3 +128,4 @@ class HestonModel():
 
 hest = HestonModel(s=154.08, k=147, t=1/365, v=0.0105, r=0.1, theta=0.0837, kappa=74.32, sigma=3.4532, rho=-0.8912)
 
+hest_2 = HestonModel(s=1, k=2, t=10, v=0.16, r=0, theta=0.16, kappa = 1, sigma=2, rho=-0.8)
