@@ -102,13 +102,14 @@ class HestonModel():
             - P2 = The risk neutral probability of exercise.
         """
 
-        integrated = integrate.quad(self.integrand, 0, np.inf, epsabs=0, args=j, full_output=0)
+        integrated = integrate.quad(self.integrand, 0, np.inf, args=j)
         # integrate.quad(self.integrand, lower limit, upper limit, args= extra arguments to pass through function )
         p = 0.5 + (1 / np.pi) * integrated[0]
         return p
 
     def european_call(self):
-        call_price = self.s * (self.probability_function(1)) - self.k * np.exp(-self.r * self.t) * (self.probability_function(2))
+        call_price = self.s * (self.probability_function(1)) \
+                     - self.k * np.exp(-self.r * self.t) * (self.probability_function(2))
         return call_price
 
     def european_put(self):
