@@ -193,7 +193,8 @@ class HestonModel():
         return integrand_theta
 
     def greek_theta(self):
-        theta = -(self.k * np.exp(-self.r * self.t)/2) + (1 / np.pi) * integrate.quad(self.greek_integrand_theta, 0, np.inf)[0]
+        print(integrate.quad(self.greek_integrand_theta, 0, np.inf)[0])
+        theta = -(self.k * self.r * np.exp(-self.r * self.t)/2) + (1 / np.pi) * integrate.quad(self.greek_integrand_theta, 0, np.inf)[0]
         return theta
 
 
