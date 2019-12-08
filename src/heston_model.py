@@ -136,18 +136,21 @@ class HestonModel():
         return integrand_vega
 
     def greek_vega(self):
-
-        integrand_vega = self.greek_integrand_vega
-
-        vega = (1/np.pi) * integrate.quad(integrand_vega, 0, np.inf)[0]
+        vega = (1/np.pi) * integrate.quad(self.greek_integrand_vega, 0, np.inf)[0]
         return vega
 
-    def greek_ingegrand_gamma(self, phi):
+    def greek_integrand_gamma(self, phi):
         (a, b_1, d_1, g_1, C_1, D_1, f_1) = self.characteristic_function(phi, 1)
         (a, b_2, d_2, g_2, C_2, D_2, f_2) = self.characteristic_function(phi, 2)
+
+        integrand_gamma = np.real(np.exp(-complex(0, 1) * phi * np.log(self.k)) * (1 / self.s * (1 + complex(0, 1) / phi) * f_1 + self.k * np.exp(-self.r * self.t) / self.s ** 2 * (1 - complex(0, 1) * phi) * f_2))
+        return integrand_gamma
+
+    def greek_gamma(self):
+        gamma = 1/np.pi * integrate.quad(self.greek_integrand_gamma, 0, np.inf)[0]
+        return gamma
 
 
 
 hest = HestonModel(s=154.08, k=147, t=1/365, v=0.0105, r=0.1, theta=0.0837, kappa=74.32, sigma=3.4532, rho=-0.8912)
-
 hest_2 = HestonModel(s=1, k=2, t=10, v=0.16, r=0, theta=0.16, kappa=1, sigma=2, rho=-0.8)
