@@ -71,24 +71,20 @@ class HestonModel():
             (b - self.rho * self.sigma * phi * complex(0, 1) + d)
 
         # c = the first coefficient within the characteristic function, f
-        c = self.r * phi * complex(0, 1) * self.t \
-            + (a / (self.sigma ** 2)) * ((b - self.rho * self.sigma * phi * complex(0, 1) - d)*self.t
-                                     - 2 * np.log((1 - g * np.exp(-d * self.t)) / (1-g)))
-
-        #c = self.r * phi * complex(0, 1) * self.t + a / self.sigma ** 2 * ((b - self.rho * self.sigma * phi * complex(0, 1) - d)*self.t - 2 * np.log((1 - g * np.exp(-d * self.t)) / (1-g)))
+        C = self.r * phi * complex(0, 1) * self.t \
+            + (a / (self.sigma ** 2)) * ((b - self.rho * self.sigma * phi * complex(0, 1) - d)*self.t \
+                                         - 2 * np.log((1 - g * np.exp(-d * self.t)) / (1-g)))
 
         # dd = the second coefficient within the characteristic function
-        dd = ((b - self.rho * self.sigma * phi * complex(0, 1) - d) /
-              (self.sigma ** 2)) * ((1 - np.exp(-d * self.t)) / (1 - g * np.exp(-d * self.t)))
+        D = ((b - self.rho * self.sigma * phi * complex(0, 1) - d) /\
+             (self.sigma ** 2)) * ((1 - np.exp(-d * self.t)) / (1 - g * np.exp(-d * self.t)))
 
-        #dd = (b - self.rho * self.sigma * phi * complex(0, 1) - d) / self.sigma ** 2 * ((1 - np.exp(-d * self.t)) / (1 - g * np.exp(-d * self.t)))
-
-        f = np.exp(c + dd * self.v + complex(0, 1) * phi * x)
-        return f
+        f = np.exp(C + D * self.v + complex(0, 1) * phi * x)
+        return a, b, d, g, C,  D, f
 
     def integrand(self, phi, j):
 
-        f = self.characteristic_function(phi, j)
+        (a, b, d, g, C,  D, f) = self.characteristic_function(phi, j)
 
         integrand = np.real(np.exp(-phi * complex(0, 1) * np.log(self.k)) * f / (phi * complex(0, 1)))
         return integrand
@@ -127,6 +123,31 @@ class HestonModel():
         delta = self.probability_function(1)
         return delta
 
+    def greek_integrand_vega(self, phi):
+
+        (a, b_1, d_1, g_1, C_1, D_1, f_1) = self.characteristic_function(phi, 1)
+        (a, b_2, d_2, g_2, C_2, D_2, f_2) = self.characteristic_function(phi, 2)
+
+        # Doing some algebra to get into one statement. Bring in S and K, then exp( phi * i * ln(K)) is common.
+        integrand_vega = np.real(
+            ((np.exp(-complex(0, 1) * phi * np.log(self.k))) * (self.s * f_1 * D_1 - self.k * np.exp(-self.r * self.t) * f_2 * D_2)) /
+            (phi*complex(0, 1))
+        )
+        return integrand_vega
+
+    def greek_vega(self):
+
+        integrand_vega = self.greek_integrand_vega
+
+        vega = (1/np.pi) * integrate.quad(integrand_vega, 0, np.inf)[0]
+        return vega
+
+    def greek_ingegrand_gamma(self, phi):
+        (a, b_1, d_1, g_1, C_1, D_1, f_1) = self.characteristic_function(phi, 1)
+        (a, b_2, d_2, g_2, C_2, D_2, f_2) = self.characteristic_function(phi, 2)
+
+
+
 hest = HestonModel(s=154.08, k=147, t=1/365, v=0.0105, r=0.1, theta=0.0837, kappa=74.32, sigma=3.4532, rho=-0.8912)
 
-hest_2 = HestonModel(s=1, k=2, t=10, v=0.16, r=0, theta=0.16, kappa = 1, sigma=2, rho=-0.8)
+hest_2 = HestonModel(s=1, k=2, t=10, v=0.16, r=0, theta=0.16, kappa=1, sigma=2, rho=-0.8)
