@@ -24,5 +24,12 @@ Where P<sub>j</sub> and f<sub>j</sub> are the following:
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=f_{j}&space;=&space;e^{C&space;&plus;&space;D.v&space;&plus;&space;ln(S)\phi&space;i&space;}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?f_{j}&space;=&space;e^{C&space;&plus;&space;D.v&space;&plus;&space;ln(S)\phi&space;i&space;}" title="f_{j} = e^{C + D.v + ln(S)\phi i }" /></a>
 
-### Get derivative of P<sub>j</sub> and f<sub>j</sub>
+### Get derivative of P<sub>j</sub> and f<sub>j</sub> wrt S
 
+<a href="https://www.codecogs.com/eqnedit.php?latex=\frac{\partial&space;f_{j}}{\partial&space;S}&space;=&space;\frac{i\phi&space;}{S}&space;f_{j}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\frac{\partial&space;f_{j}}{\partial&space;S}&space;=&space;\frac{i\phi&space;}{S}&space;f_{j}" title="\frac{\partial f_{j}}{\partial S} = \frac{i\phi }{S} f_{j}" /></a>
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=\frac{\partial&space;P_{j}}{\partial&space;S}&space;=&space;\frac{1}{\pi}&space;\int_{0}^{\infty}&space;Re(\frac{e^{-i&space;\phi&space;ln(K))&space;}f_{j}}{S})" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\frac{\partial&space;P_{j}}{\partial&space;S}&space;=&space;\frac{1}{\pi}&space;\int_{0}^{\infty}&space;Re(\frac{e^{-i&space;\phi&space;ln(K))&space;}f_{j}}{S})" title="\frac{\partial P_{j}}{\partial S} = \frac{1}{\pi} \int_{0}^{\infty} Re(\frac{e^{-i \phi ln(K)) }f_{j}}{S})" /></a>
+
+### Subbing in the derivatives of P<sub>j</sub> and f<sub>j</sub> 
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=Delta&space;=&space;\frac{1}{2}&space;&plus;&space;\frac{1}{\pi}\int_{0}^{\infty&space;}&space;Re(e^{-i\phi&space;ln(K)}&space;*((1&plus;\frac{1}{i\phi})f_{j}-\frac{Ke^{-rt}}{S}f_{2}))d\phi" target="_blank"><img src="https://latex.codecogs.com/gif.latex?Delta&space;=&space;\frac{1}{2}&space;&plus;&space;\frac{1}{\pi}\int_{0}^{\infty&space;}&space;Re(e^{-i\phi&space;ln(K)}&space;*((1&plus;\frac{1}{i\phi})f_{j}-\frac{Ke^{-rt}}{S}f_{2}))d\phi" title="Delta = \frac{1}{2} + \frac{1}{\pi}\int_{0}^{\infty } Re(e^{-i\phi ln(K)} *((1+\frac{1}{i\phi})f_{j}-\frac{Ke^{-rt}}{S}f_{2}))d\phi" /></a>
