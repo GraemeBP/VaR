@@ -110,7 +110,8 @@ class HestonModel():
         return call_price
 
     def european_put(self):
-        put_price = self.k * (1-self.probability_function(2)) - self.s * (1-self.probability_function(1))
+        put_price = self.k * np.exp(-self.r*self.t) * (1-self.probability_function(2)) \
+                    - self.s * (1-self.probability_function(1))
         return put_price
 
     def prob_of_exercise(self):
