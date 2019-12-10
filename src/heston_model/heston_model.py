@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.integrate as integrate
 
+
 class HestonModel():
 
     def __init__(self, s, k, t, v, r, theta, kappa, sigma, rho):
@@ -163,41 +164,43 @@ class HestonModel():
         rho = (0.5 * self.k * self.t)*np.exp(-self.r * self.t) + (self.t/np.pi)* integrate.quad(self.greek_integrand_rho, 0, np.inf)[0]
         return rho
 
-    def dC_dt(self, phi, j):
-        (a, b, d, g, C, D, f) = self.characteristic_function(phi, j)
 
-        dC_dt = self.r * phi * complex(0, 1) + a / self.sigma ** 2 * ((b - self.rho * self.sigma * phi * complex(0, 1) - d) - (2 * d * g * np.exp(-d * self.t)) / (1 - g * np.exp(-d * self.t)))
-
-
-
-        return dC_dt
-
-    def dD_dt(self, phi, j):
-        (a, b, d, g, C, D, f) = self.characteristic_function(phi, j)
-
-        dD_dt = ((b - self.rho * self.sigma * phi * complex(0, 1) - d) / (self.sigma ** 2)) * (d * np.exp(-d * self.t) / (1 - g * np.exp(-d * self.t)) - ((1 - np.exp(-d * self.t)) * (d * g * np.exp(-d * self.t))) / (1 - g * np.exp(-d * self.t))**2)
-        return dD_dt
-
-    def greek_integrand_theta(self, phi):
+    def greek_volga_integrand(self, phi):
         (a, b_1, d_1, g_1, C_1, D_1, f_1) = self.characteristic_function(phi, 1)
         (a, b_2, d_2, g_2, C_2, D_2, f_2) = self.characteristic_function(phi, 2)
 
-        # TO DO: add in the char func as inputs into dc_dt so it is not run twice.
-        dC_dt_1 = self.dC_dt(phi, 1)
-        dC_dt_2 = self.dC_dt(phi, 2)
+        integrand_volga = np.real(np.exp(-complex(0, 1) * phi * np.log(self.k)) / (-complex(0, 1) * phi) *
+                                  (self.k * np.exp(-self.r * self.t) * f_2 * D_2 ** 2 - self.s * f_1 * D_1 ** 2))
+        return integrand_volga
 
-        dD_dt_1 = self.dD_dt(phi, 1)
-        dD_dt_2 = self.dD_dt(phi, 2)
+    def greek_volga(self):
+        volga = 1/np.pi * integrate.quad(self.greek_volga_integrand, 0, np.inf, epsabs=0)[0]
+        return volga
 
-        integrand_theta = np.real(np.exp(-complex(0, 1) * phi * np.log(self.k)) / (phi * complex(0,1)) * ((dC_dt_1 + dD_dt_1 * self.v) * f_1 * self.s   - (self.r + dC_dt_2 + dD_dt_2* self.v) * f_2 * self.k * np.exp(-self.r * self.t)))
-        return integrand_theta
+    def greek_vanna_integrand(self, phi):
+        (a, b_1, d_1, g_1, C_1, D_1, f_1) = self.characteristic_function(phi, 1)
+        (a, b_2, d_2, g_2, C_2, D_2, f_2) = self.characteristic_function(phi, 2)
+
+        vanna_integrand = np.real(np.exp(-complex(0,1) * phi * np.log(self.k)) * (
+                (1 - complex(0, 1)/phi) * f_1 * D_1 - self.k * np.exp(-self.r * self.t) / self.s * f_2 * D_2
+            )
+        )
+
+        return vanna_integrand
+
+    def greek_vanna(self):
+        vanna = 1/np.pi * integrate.quad(self.greek_vanna_integrand, 0, np.inf, epsabs=0)[0]
+        return vanna
 
     def greek_theta(self):
-        print(integrate.quad(self.greek_integrand_theta, 0, np.inf)[0])
-        theta = -(self.k * self.r * np.exp(-self.r * self.t)/2) + (1 / np.pi) * integrate.quad(self.greek_integrand_theta, 0, np.inf)[0]
+
+        theta = -0.5*self.r * self.s**2 * self.greek_gamma() \
+            - self.rho * self.sigma * self.v * self.s * self.greek_vanna() \
+            - 0.5 * self.sigma**2 * self.v * self.greek_volga() \
+            + self.r * self.european_call() \
+            - self.r * self.s * self.greek_delta() \
+            - self.kappa * (self.s - self.v) * self.greek_vega()
         return theta
-
-
 
 
 hest = HestonModel(s=154.08, k=147, t=1/365, v=0.0105, r=0.1, theta=0.0837, kappa=74.32, sigma=3.4532, rho=-0.8912)
