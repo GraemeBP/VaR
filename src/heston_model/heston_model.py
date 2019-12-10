@@ -164,7 +164,6 @@ class HestonModel():
         rho = (0.5 * self.k * self.t)*np.exp(-self.r * self.t) + (self.t/np.pi)* integrate.quad(self.greek_integrand_rho, 0, np.inf)[0]
         return rho
 
-
     def greek_volga_integrand(self, phi):
         (a, b_1, d_1, g_1, C_1, D_1, f_1) = self.characteristic_function(phi, 1)
         (a, b_2, d_2, g_2, C_2, D_2, f_2) = self.characteristic_function(phi, 2)
@@ -194,12 +193,12 @@ class HestonModel():
 
     def greek_theta(self):
 
-        theta = -0.5*self.r * self.s**2 * self.greek_gamma() \
+        theta = -0.5 * self.r * self.s**2 * self.greek_gamma() \
             - self.rho * self.sigma * self.v * self.s * self.greek_vanna() \
             - 0.5 * self.sigma**2 * self.v * self.greek_volga() \
             + self.r * self.european_call() \
             - self.r * self.s * self.greek_delta() \
-            - self.kappa * (self.s - self.v) * self.greek_vega()
+            - self.kappa * (self.theta - self.v) * self.greek_vega()
         return theta
 
 
