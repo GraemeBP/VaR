@@ -1,4 +1,5 @@
 from src.heston_model.heston_model import HestonModel
+from matplotlib import pyplot as plt
 
 
 class GraphGreeksHeston():
@@ -41,9 +42,11 @@ class GraphGreeksHeston():
 
     def greek_simulation(self):
 
+        new_parameter_value_list = []
         greek_values = []
         for i in range(self.start, self.finish + self.step, self.step):
             new_parameter_value = i
+            new_parameter_value_list.append(new_parameter_value)
             self.parameter_update(new_parameter_value)
 
             Hest = HestonModel(self.s, self.k, self.t, self.v, self.r, self.theta, self.kappa, self.sigma, self.rho)
@@ -51,11 +54,23 @@ class GraphGreeksHeston():
             if self.greek == "delta":
                 greek_values.append(Hest.greek_delta())
 
-        return greek_values
+        return new_parameter_value_list, greek_values
+
+    def greek_plot(self):
+
+        (new_parameter_value_list, greek_values) = self.greek_simulation()
+        plt.plot(new_parameter_value_list, greek_values)
+        plt.ylabel("delta")
+        plt.xlabel("stock price")
+        plt.title("Plot of Change of Delta as the Stock Price moves")
+        plt.show()
+
+
 
 
 hest_list = [154.08, 147, 1/365, 0.0105, 0.1, 0.0837, 74.32, 3.4532, -0.8912]
 Class_Test = GraphGreeksHeston(greek='delta', initial_condition= hest_list, model_parameter = 's', start=150, finish=160, step=1)
+Class_Test.greek_plot()
 
 
 
