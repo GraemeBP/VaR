@@ -1,5 +1,6 @@
 import numpy as np
 import scipy.integrate as integrate
+from datetime import datetime
 
 
 class HestonModel():
@@ -193,6 +194,7 @@ class HestonModel():
         return vanna
 
     def greek_theta(self):
+        start = datetime.now()
 
         theta = -0.5 * self.r * self.s**2 * self.greek_gamma() \
             - self.rho * self.sigma * self.v * self.s * self.greek_vanna() \
@@ -200,7 +202,57 @@ class HestonModel():
             + self.r * self.european_call() \
             - self.r * self.s * self.greek_delta() \
             - self.kappa * (self.theta - self.v) * self.greek_vega()
+        print(datetime.now() - start)
         return theta
+
+    def dC_dt(self, phi, a, b, d, g):
+
+        return self.r * phi * complex(0, 1) + a/self.sigma**2 * (
+                (
+                        b - self.rho * self.sigma * phi * complex(0, 1) - d
+                ) -
+                2 * g * d * np.exp(-d * self.t) / (1 - g * np.exp(-d * self.t))
+        )
+
+    def dD_dt(self, phi, b, d, g):
+
+        return (1 / self.sigma**2) * (
+                b - self.rho * self.sigma * phi * complex(0, 1) - d
+        ) * (
+                d * np.exp(-d * self.t) / (1 - g * np.exp(-d * self.t)) -
+                 g * d * np.exp(-d * self.t) * (1 - np.exp(-d * self.t)) / ((1 - g * np.exp(-d * self.t))**2)
+        )
+
+    def theta_integrand(self, phi):
+
+        (a_1, b_1, d_1, g_1, C_1, D_1, f_1) = self.characteristic_function(phi, 1)
+        (a_2, b_2, d_2, g_2, C_2, D_2, f_2) = self.characteristic_function(phi, 2)
+
+        dC_dt_1 = self.dC_dt(phi, a_1, b_1, d_1, g_1)
+        dC_dt_2 = self.dC_dt(phi, a_2, b_2, d_2, g_2)
+
+        dD_dt_1 = self.dD_dt(phi, b_1, d_1, g_1)
+        dD_dt_2 = self.dD_dt(phi, b_2, d_2, g_2)
+
+        return np.real(
+            complex(0, -1) * np.exp(complex(0, -1) * phi * np.log(self.k)) / phi *
+            (
+                    (dC_dt_1 + self.v * dD_dt_1) * f_1 * self.s - f_2 * self.k * np.exp(- self.r * self.t) *
+                    (-self.r + dC_dt_2 + self.v * dD_dt_2)
+            )
+        )
+
+    def theta_h(self):
+        start = datetime.now()
+        """
+        Theta measures the sensitivity of the theoretical value of an option to a change in the time to maturity.
+        :return: the change in the theoretical value of an option for a change in the time to maturity.
+        """
+        y = integrate.quad(self.theta_integrand, 0, np.inf, epsabs=0, full_output=0)
+        theta = -(self.k * self.r * np.exp(- self.r * self.t) / 2 + (1/np.pi) * y[0])
+        print(datetime.now() - start)
+        return theta
+
 
 
 hest = HestonModel(s=154.08, k=147, t=1/365, v=0.0105, r=0.1, theta=0.0837, kappa=74.32, sigma=3.4532, rho=-0.8912)
