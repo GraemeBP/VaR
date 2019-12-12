@@ -20,6 +20,7 @@ class GraphGreeksHeston():
         self.finish = finish
         self.step = step
 
+
     def parameter_update(self, new_parameter_value):
         if self.model_parameter == "s":
             self.s = new_parameter_value
@@ -53,6 +54,18 @@ class GraphGreeksHeston():
 
             if self.greek == "delta":
                 greek_values.append(Hest.greek_delta())
+            elif self.greek == "gamma":
+                greek_values.append(Hest.greek_gamma())
+            elif self.greek == "vega":
+                greek_values.append(Hest.greek_vega())
+            elif self.greek == "rho":
+                greek_values.append(Hest.greek_rho())
+            elif self.greek == "volga":
+                greek_values.append(Hest.greek_volga())
+            elif self.greek == "vanna":
+                greek_values.append(Hest.greek_vanna())
+            elif self.greek == "theta":
+                greek_values.append(Hest.theta_h())
 
         return new_parameter_value_list, greek_values
 
@@ -60,16 +73,36 @@ class GraphGreeksHeston():
 
         (new_parameter_value_list, greek_values) = self.greek_simulation()
         plt.plot(new_parameter_value_list, greek_values)
-        plt.ylabel("delta")
-        plt.xlabel("stock price")
-        plt.title("Plot of Change of Delta as the Stock Price moves")
+
+        plt.ylabel(self.greek)
+        if self.model_parameter == "s":
+            plt.xlabel("stock price")
+        elif self.model_parameter == "k":
+            plt.xlabel("strike price")
+        elif self.model_parameter == "t":
+            plt.xlabel("time to maturity")
+        elif self.model_parameter == "v":
+            plt.xlabel("initial volatility")
+        elif self.model_parameter == "r":
+            plt.xlabel("interest rate")
+        elif self.model_parameter == "theta":
+            plt.xlabel("long run average volatility")
+        elif self.model_parameter == "kappa":
+            plt.xlabel("speed on conversation")
+        elif self.model_parameter == "sigma":
+            plt.xlabel("volatility of volatility")
+        elif self.model_parameter == "rho":
+            plt.xlabel("correlation of weiner process")
         plt.show()
 
 
-
-
 hest_list = [154.08, 147, 1/365, 0.0105, 0.1, 0.0837, 74.32, 3.4532, -0.8912]
-Class_Test = GraphGreeksHeston(greek='delta', initial_condition= hest_list, model_parameter = 's', start=150, finish=160, step=1)
+Class_Test = GraphGreeksHeston(greek='vega',
+                               initial_condition=hest_list,
+                               model_parameter='s',
+                               start=120,
+                               finish=190,
+                               step=1)
 Class_Test.greek_plot()
 
 
