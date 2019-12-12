@@ -20,7 +20,6 @@ class GraphGreeksHeston():
         self.finish = finish
         self.step = step
 
-
     def parameter_update(self, new_parameter_value):
         if self.model_parameter == "s":
             self.s = new_parameter_value
@@ -96,8 +95,10 @@ class GraphGreeksHeston():
         plt.show()
 
 
-hest_list = [154.08, 147, 1/365, 0.0105, 0.1, 0.0837, 74.32, 3.4532, -0.8912]
-Class_Test = GraphGreeksHeston(greek='vega',
+# hest = HestonModel(s=154.08, k=147, t=1/365, v=0.0105, r=0.1, theta=0.0837, kappa=74.32, sigma=3.4532, rho=-0.8912)
+
+hest_list = [154.08, 155, 15/365, 0.0105, 0.1, 0.0837, 74.32, 3.4532, -0.8912]
+Class_Test = GraphGreeksHeston(greek='gamma',
                                initial_condition=hest_list,
                                model_parameter='s',
                                start=120,

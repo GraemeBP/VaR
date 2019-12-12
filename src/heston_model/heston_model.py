@@ -106,8 +106,8 @@ class HestonModel():
         return p
 
     def european_call(self):
-        call_price = self.s * (self.probability_function(1)) \
-                     - self.k * np.exp(-self.r * self.t) * (self.probability_function(2))
+        call_price = self.s * self.probability_function(1) \
+                     - self.k * np.exp(-self.r * self.t) * self.probability_function(2)
         return call_price
 
     def european_put(self):
@@ -127,14 +127,19 @@ class HestonModel():
         return delta
 
     def greek_integrand_gamma(self, phi):
-        (a, b_1, d_1, g_1, C_1, D_1, f_1) = self.characteristic_function(phi, 1)
-        (a, b_2, d_2, g_2, C_2, D_2, f_2) = self.characteristic_function(phi, 2)
 
-        integrand_gamma = np.real(np.exp(-complex(0, 1) * phi * np.log(self.k)) * (1 / self.s * (1 + complex(0, 1) / phi) * f_1 + self.k * np.exp(-self.r * self.t) / self.s ** 2 * (1 - complex(0, 1) * phi) * f_2))
-        return integrand_gamma
+        (a, b, d, g, C, D, f_1) = self.characteristic_function(phi, 1)
+        (a, b, d, g, C, D, f_2) = self.characteristic_function(phi, 2)
+
+        return np.real(
+            np.exp(complex(0, -1) * phi * np.log(self.k)) * (
+                    1/self.s * (1 + complex(0, 1) * phi) * f_1 + self.k *
+                    np.exp(-self.r * self.t) / self.s**2 * (1 - complex(0, 1) * phi) * f_2
+            )
+        )
 
     def greek_gamma(self):
-        gamma = 1/np.pi * integrate.quad(self.greek_integrand_gamma, 0, np.inf)[0]
+        gamma = 1/np.pi * integrate.quad(self.gamma_integrand, 0, np.inf, epsabs=0, full_output=0)[0]
         return gamma
 
     def greek_integrand_vega(self, phi):
@@ -254,6 +259,22 @@ class HestonModel():
         return theta
 
 
+hest = HestonModel(s=154.08,
+                   k=155,
+                   t=15/365,
+                   v=0.0105,
+                   r=0.1,
+                   theta=0.0837,
+                   kappa=74.32,
+                   sigma=3.4532,
+                   rho=-0.8912)
 
-hest = HestonModel(s=154.08, k=147, t=1/365, v=0.0105, r=0.1, theta=0.0837, kappa=74.32, sigma=3.4532, rho=-0.8912)
-hest_2 = HestonModel(s=1, k=2, t=10, v=0.16, r=0, theta=0.16, kappa=1, sigma=2, rho=-0.8)
+hest_2 = HestonModel(s=1,
+                     k=2,
+                     t=10,
+                     v=0.16,
+                     r=0,
+                     theta=0.16,
+                     kappa=1,
+                     sigma=2,
+                     rho=-0.8)
