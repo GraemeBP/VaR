@@ -136,3 +136,7 @@ class BlackScholes():
                     - self.d * self.s * (np.exp(-self.d * self.t)) * si.norm.cdf(- self.d1_european_put())
 
         return theta
+
+
+BlackS = BlackScholes(154.08, 155, 15/365, 0.2331, 0.0, 0.1)
+BlackS.greek_gamma('call')

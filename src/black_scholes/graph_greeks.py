@@ -2,6 +2,7 @@ from src.black_scholes.black_scholes import BlackScholes
 from matplotlib import pyplot as plt
 from numpy import arange
 
+
 class GraphGreeksBS:
     def __init__(self, greek, initial_condition, model_parameter, start, finish, step, option_type):
         self.greek = greek
@@ -43,18 +44,18 @@ class GraphGreeksBS:
             new_parameter_value_list.append(new_parameter_value)
             self.parameter_update(new_parameter_value)
 
-            BS = BlackScholes(self.s, self.k, self.t, self.sigma, self.d, self.r)
+            bs_inputs = BlackScholes(self.s, self.k, self.t, self.sigma, self.d, self.r)
 
             if self.greek == "delta":
-                greek_values.append(BS.greek_delta(self.option_type))
+                greek_values.append(bs_inputs.greek_delta(self.option_type))
             elif self.greek == "gamma":
-                greek_values.append(BS.greek_gamma(self.option_type))
+                greek_values.append(bs_inputs.greek_gamma(self.option_type))
             elif self.greek == "vega":
-                greek_values.append(BS.greek_vega(self.option_type))
+                greek_values.append(bs_inputs.greek_vega(self.option_type))
             elif self.greek == "rho":
-                greek_values.append(BS.greek_rho(self.option_type))
+                greek_values.append(bs_inputs.greek_rho(self.option_type))
             elif self.greek == "theta":
-                greek_values.append(BS.greek_theta(self.option_type))
+                greek_values.append(bs_inputs.greek_theta(self.option_type))
 
         return new_parameter_value_list, greek_values
 
@@ -80,7 +81,7 @@ class GraphGreeksBS:
 
 
 BS = [154.08, 155, 15/365, 0.2331, 0.0, 0.1]
-BSClass_Test = GraphGreeksBS(greek='gamma',
+BSClass_Test = GraphGreeksBS(greek='theta',
                              initial_condition=BS,
                              model_parameter='s',
                              start=120,
