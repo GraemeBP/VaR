@@ -78,14 +78,14 @@ class GraphGreeksBS():
         plt.show()
 
 
-BS = [154.08, 147, 1/365, 0.3, 0.0, 0.1]
-BSClass_Test = GraphGreeksBS(greek='vega',
-                           initial_condition=BS,
-                           model_parameter='s',
-                           start=120,
-                           finish=190,
-                           step=1,
-                           option_type="call")
+BS = [154.08, 155, 15/365, 0.2331, 0.0, 0.1]
+BSClass_Test = GraphGreeksBS(greek='delta',
+                             initial_condition=BS,
+                             model_parameter='s',
+                             start=120,
+                             finish=190,
+                             step=1,
+                             option_type="call")
 BSClass_Test.greek_plot()
 
 

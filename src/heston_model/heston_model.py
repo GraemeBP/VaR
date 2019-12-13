@@ -1,9 +1,8 @@
-import numpy as np
+from numpy import real, exp, sqrt, log, pi, inf
 import scipy.integrate as integrate
-from datetime import datetime
 
 
-class HestonModel():
+class HestonModel:
 
     def __init__(self, s, k, t, v, r, theta, kappa, sigma, rho):
         """
@@ -48,13 +47,14 @@ class HestonModel():
             u = -0.5
             b = self.kappa
 
-        a = (self.kappa * self.theta)
+        a = self.kappa * self.theta
 
         # Since we are getting the CF of the log of the stock price.
-        x = np.log(self.s)
+        x = log(self.s)
 
-        d = np.sqrt((self.rho * self.sigma * phi * complex(0, 1) - b)**2
-                    - self.sigma ** 2 * (2 * u * phi * complex(0, 1) - phi**2))
+        d = sqrt(
+            (self.rho * self.sigma * phi * complex(0, 1) - b)**2 -
+            self.sigma ** 2 * (2 * u * phi * complex(0, 1) - phi**2))
 
         # The Heston Model presented within his paper (link below) suffers from discontinuities when
         # the complex logarithm is restricted to its principal branch. This can lead to incorrect option prices.
@@ -73,23 +73,29 @@ class HestonModel():
             (b - self.rho * self.sigma * phi * complex(0, 1) + d)
 
         # c = the first coefficient within the characteristic function, f
-        C = self.r * phi * complex(0, 1) * self.t \
-            + (a / (self.sigma ** 2)) * ((b - self.rho * self.sigma * phi * complex(0, 1) - d)*self.t \
-                                         - 2 * np.log((1 - g * np.exp(-d * self.t)) / (1-g)))
+        C = self.r * phi * complex(0, 1) * self.t + (a / (self.sigma ** 2)) * \
+            (
+                    (b - self.rho * self.sigma * phi * complex(0, 1) - d)*self.t -
+                    2 * log((1 - g * exp(-d * self.t)) / (1-g))
+            )
 
         # dd = the second coefficient within the characteristic function
-        D = ((b - self.rho * self.sigma * phi * complex(0, 1) - d) /\
-             (self.sigma ** 2)) * ((1 - np.exp(-d * self.t)) / (1 - g * np.exp(-d * self.t)))
+        D = (
+                    (b - self.rho * self.sigma * phi * complex(0, 1) - d) / (self.sigma ** 2)
+            ) * (
+                    (1 - exp(-d * self.t)) / (1 - g * exp(-d * self.t))
+            )
 
-        f = np.exp(C + D * self.v + complex(0, 1) * phi * x)
+        f = exp(C + D * self.v + complex(0, 1) * phi * x)
         return a, b, d, g, C,  D, f
 
     def integrand(self, phi, j):
-
         (a, b, d, g, C,  D, f) = self.characteristic_function(phi, j)
 
-        integrand = np.real(np.exp(-phi * complex(0, 1) * np.log(self.k)) * f / (phi * complex(0, 1)))
-        return integrand
+        return real(
+            exp(-phi * complex(0, 1) * log(self.k)) * f /
+            (phi * complex(0, 1))
+        )
 
     def probability_function(self, j):
         """
@@ -100,18 +106,17 @@ class HestonModel():
             - P2 = The risk neutral probability of exercise.
         """
 
-        integrated = integrate.quad(self.integrand, 0, np.inf, args=j)
+        integrated = integrate.quad(self.integrand, 0, inf, args=j, epsabs=0, full_output=0)
         # integrate.quad(self.integrand, lower limit, upper limit, args= extra arguments to pass through function )
-        p = 0.5 + (1 / np.pi) * integrated[0]
-        return p
+        return 0.5 + (1 / pi) * integrated[0]
 
     def european_call(self):
         call_price = self.s * self.probability_function(1) \
-                     - self.k * np.exp(-self.r * self.t) * self.probability_function(2)
+                     - self.k * exp(-self.r * self.t) * self.probability_function(2)
         return call_price
 
     def european_put(self):
-        put_price = self.k * np.exp(-self.r*self.t) * (1-self.probability_function(2)) \
+        put_price = self.k * exp(-self.r*self.t) * (1-self.probability_function(2)) \
                     - self.s * (1-self.probability_function(1))
         return put_price
 
@@ -123,6 +128,11 @@ class HestonModel():
         return prob_of_exercise
 
     def greek_delta(self):
+        """
+        Delta measures the sensitivity of the theoretical value of an option to a change in price of the underlying
+        stock price.
+        :return: the change in the theoretical value of an option for a change in price of the underlying stock price.
+        """
         delta = self.probability_function(1)
         return delta
 
@@ -131,16 +141,16 @@ class HestonModel():
         (a, b, d, g, C, D, f_1) = self.characteristic_function(phi, 1)
         (a, b, d, g, C, D, f_2) = self.characteristic_function(phi, 2)
 
-        return np.real(
-            np.exp(complex(0, -1) * phi * np.log(self.k)) * (
-                    1/self.s * (1 + complex(0, 1) * phi) * f_1 + self.k *
-                    np.exp(-self.r * self.t) / self.s**2 * (1 - complex(0, 1) * phi) * f_2
+        return real(
+            exp(complex(0, -1) * phi * log(self.k)) *
+            (
+                    1/self.s * (1 + complex(0, 1) * phi) * f_1 +
+                    self.k * exp(-self.r * self.t) / self.s**2 * (1 - complex(0, 1) * phi) * f_2
             )
         )
 
     def greek_gamma(self):
-        gamma = 1/np.pi * integrate.quad(self.gamma_integrand, 0, np.inf, epsabs=0, full_output=0)[0]
-        return gamma
+        return 1/pi * integrate.quad(self.greek_integrand_gamma, 0, inf)[0]
 
     def greek_integrand_vega(self, phi):
 
@@ -148,85 +158,91 @@ class HestonModel():
         (a, b_2, d_2, g_2, C_2, D_2, f_2) = self.characteristic_function(phi, 2)
 
         # Doing some algebra to get into one statement. Bring in S and K, then exp( phi * i * ln(K)) is common.
-        integrand_vega = np.real(
-            ((np.exp(-complex(0, 1) * phi * np.log(self.k))) * (self.s * f_1 * D_1 - self.k * np.exp(-self.r * self.t) * f_2 * D_2)) /
-            (phi*complex(0, 1))
+        integrand_vega = real(
+            (
+                    (
+                        exp(-complex(0, 1) * phi * log(self.k))
+                    ) *
+                    (
+                            self.s * f_1 * D_1 - self.k * exp(-self.r * self.t) * f_2 * D_2
+                    )
+            ) / (phi*complex(0, 1))
         )
         return integrand_vega
 
     def greek_vega(self):
-        vega = (1/np.pi) * integrate.quad(self.greek_integrand_vega, 0, np.inf)[0]
-        return vega
+        return (1/pi) * integrate.quad(self.greek_integrand_vega, 0, inf)[0]
 
     def greek_integrand_rho(self, phi):
 
         (a, b_1, d_1, g_1, C_1, D_1, f_1) = self.characteristic_function(phi, 1)
         (a, b_2, d_2, g_2, C_2, D_2, f_2) = self.characteristic_function(phi, 2)
 
-        integrand_rho = np.real( np.exp(-complex(0,1) * phi * np.log(self.k)) * (self.s * f_1 - self.k*(np.exp(-self.r*self.t))*(1/(-complex(0,1) * phi) +1)*f_2))
+        integrand_rho = real(
+            exp(-complex(0, 1) * phi * log(self.k)) *
+            (
+                    self.s * f_1 - self.k*(exp(-self.r*self.t)) * (1/(-complex(0, 1) * phi) + 1)*f_2
+            )
+        )
 
         return integrand_rho
 
     def greek_rho(self):
-        rho = (0.5 * self.k * self.t)*np.exp(-self.r * self.t) + (self.t/np.pi)* integrate.quad(self.greek_integrand_rho, 0, np.inf)[0]
-        return rho
+        return (0.5 * self.k * self.t) \
+               * exp(-self.r * self.t) + \
+               (self.t/pi) * integrate.quad(self.greek_integrand_rho, 0, inf)[0]
 
     def greek_volga_integrand(self, phi):
         (a, b_1, d_1, g_1, C_1, D_1, f_1) = self.characteristic_function(phi, 1)
         (a, b_2, d_2, g_2, C_2, D_2, f_2) = self.characteristic_function(phi, 2)
 
-        integrand_volga = np.real(np.exp(-complex(0, 1) * phi * np.log(self.k)) / (-complex(0, 1) * phi) *
-                                  (self.k * np.exp(-self.r * self.t) * f_2 * D_2 ** 2 - self.s * f_1 * D_1 ** 2))
+        integrand_volga = real(
+            exp(-complex(0, 1) * phi * log(self.k)) /
+            (-complex(0, 1) * phi) *
+            (self.k * exp(-self.r * self.t) * f_2 * D_2 ** 2 - self.s * f_1 * D_1 ** 2
+             )
+        )
         return integrand_volga
 
     def greek_volga(self):
-        volga = 1/np.pi * integrate.quad(self.greek_volga_integrand, 0, np.inf, epsabs=0)[0]
-        return volga
+        return 1/pi * integrate.quad(self.greek_volga_integrand, 0, inf)[0]
 
     def greek_vanna_integrand(self, phi):
         (a, b_1, d_1, g_1, C_1, D_1, f_1) = self.characteristic_function(phi, 1)
         (a, b_2, d_2, g_2, C_2, D_2, f_2) = self.characteristic_function(phi, 2)
 
-        vanna_integrand = np.real(np.exp(-complex(0,1) * phi * np.log(self.k)) * (
-                (1 - complex(0, 1)/phi) * f_1 * D_1 - self.k * np.exp(-self.r * self.t) / self.s * f_2 * D_2
+        vanna_integrand = real(
+            exp(-complex(0, 1) * phi * log(self.k)) *
+            (
+                    (1 - complex(0, 1)/phi) * f_1 * D_1
+                    - self.k * exp(-self.r * self.t) / self.s * f_2 * D_2
             )
         )
 
         return vanna_integrand
 
     def greek_vanna(self):
-        vanna = 1/np.pi * integrate.quad(self.greek_vanna_integrand, 0, np.inf, epsabs=0)[0]
-        return vanna
-
-    def greek_theta(self):
-        start = datetime.now()
-
-        theta = -0.5 * self.r * self.s**2 * self.greek_gamma() \
-            - self.rho * self.sigma * self.v * self.s * self.greek_vanna() \
-            - 0.5 * self.sigma**2 * self.v * self.greek_volga() \
-            + self.r * self.european_call() \
-            - self.r * self.s * self.greek_delta() \
-            - self.kappa * (self.theta - self.v) * self.greek_vega()
-        print(datetime.now() - start)
-        return theta
+        return 1/pi * integrate.quad(self.greek_vanna_integrand, 0, inf)[0]
 
     def dC_dt(self, phi, a, b, d, g):
 
-        return self.r * phi * complex(0, 1) + a/self.sigma**2 * (
-                (
-                        b - self.rho * self.sigma * phi * complex(0, 1) - d
-                ) -
-                2 * g * d * np.exp(-d * self.t) / (1 - g * np.exp(-d * self.t))
-        )
+        return self.r * phi * complex(0, 1) + a/self.sigma**2 * \
+               (
+                       (
+                               b - self.rho * self.sigma * phi * complex(0, 1) - d
+                       ) -
+                       2 * g * d * exp(-d * self.t) / (1 - g * exp(-d * self.t))
+               )
 
     def dD_dt(self, phi, b, d, g):
 
-        return (1 / self.sigma**2) * (
-                b - self.rho * self.sigma * phi * complex(0, 1) - d
-        ) * (
-                d * np.exp(-d * self.t) / (1 - g * np.exp(-d * self.t)) -
-                 g * d * np.exp(-d * self.t) * (1 - np.exp(-d * self.t)) / ((1 - g * np.exp(-d * self.t))**2)
-        )
+        return (1 / self.sigma**2) * \
+               (b - self.rho * self.sigma * phi * complex(0, 1) - d) * \
+               (
+                       d * exp(-d * self.t) / (1 - g * exp(-d * self.t)) -
+                       g * d * exp(-d * self.t) * (1 - exp(-d * self.t)) /
+                       ((1 - g * exp(-d * self.t))**2)
+               )
 
     def theta_integrand(self, phi):
 
@@ -239,24 +255,23 @@ class HestonModel():
         dD_dt_1 = self.dD_dt(phi, b_1, d_1, g_1)
         dD_dt_2 = self.dD_dt(phi, b_2, d_2, g_2)
 
-        return np.real(
-            complex(0, -1) * np.exp(complex(0, -1) * phi * np.log(self.k)) / phi *
+        return real(
+            complex(0, -1) * exp(complex(0, -1) * phi * log(self.k)) / phi *
             (
-                    (dC_dt_1 + self.v * dD_dt_1) * f_1 * self.s - f_2 * self.k * np.exp(- self.r * self.t) *
+                    (dC_dt_1 + self.v * dD_dt_1) * f_1 * self.s - f_2 * self.k * exp(- self.r * self.t) *
                     (-self.r + dC_dt_2 + self.v * dD_dt_2)
             )
         )
 
-    def theta_h(self):
-        start = datetime.now()
+    def greek_theta(self):
         """
         Theta measures the sensitivity of the theoretical value of an option to a change in the time to maturity.
         :return: the change in the theoretical value of an option for a change in the time to maturity.
         """
-        y = integrate.quad(self.theta_integrand, 0, np.inf, epsabs=0, full_output=0)
-        theta = -(self.k * self.r * np.exp(- self.r * self.t) / 2 + (1/np.pi) * y[0])
-        print(datetime.now() - start)
-        return theta
+        return -(
+                self.k * self.r * exp(- self.r * self.t) / 2 +
+                (1/pi) * integrate.quad(self.theta_integrand, 0, inf)[0]
+        )
 
 
 hest = HestonModel(s=154.08,
