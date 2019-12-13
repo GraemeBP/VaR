@@ -124,14 +124,16 @@ class HestonModel:
         prob_of_exercise = self.probability_function(2)
         return prob_of_exercise
 
-    def greek_delta(self):
+    def greek_delta(self, option_type):
         """
         Delta measures the sensitivity of the theoretical value of an option to a change in price of the underlying
         stock price.
         :return: the change in the theoretical value of an option for a change in price of the underlying stock price.
         """
-        delta = self.probability_function(1)
-        return delta
+        if option_type == 'call':
+            return self.probability_function(1)
+        elif option_type == 'put':
+            return - self.probability_function(1)
 
     def greek_integrand_gamma(self, phi):
 
@@ -146,8 +148,9 @@ class HestonModel:
             )
         )
 
-    def greek_gamma(self):
-        return 1/pi * integrate.quad(self.greek_integrand_gamma, 0, inf)[0]
+    def greek_gamma(self, option_type):
+        if option_type == 'call' or 'put':
+            return 1/pi * integrate.quad(self.greek_integrand_gamma, 0, inf)[0]
 
     def greek_integrand_vega(self, phi):
 
@@ -167,8 +170,9 @@ class HestonModel:
         )
         return integrand_vega
 
-    def greek_vega(self):
-        return (1/pi) * integrate.quad(self.greek_integrand_vega, 0, inf)[0]
+    def greek_vega(self, option_type):
+        if option_type == 'call' or 'put':
+            return (1/pi) * integrate.quad(self.greek_integrand_vega, 0, inf)[0]
 
     def greek_integrand_rho(self, phi):
 
@@ -184,10 +188,15 @@ class HestonModel:
 
         return integrand_rho
 
-    def greek_rho(self):
-        return (0.5 * self.k * self.t) \
-               * exp(-self.r * self.t) + \
-               (self.t/pi) * integrate.quad(self.greek_integrand_rho, 0, inf)[0]
+    def greek_rho(self, option_type):
+        if option_type == 'call':
+            return (0.5 * self.k * self.t) \
+                   * exp(-self.r * self.t) + \
+                   (self.t/pi) * integrate.quad(self.greek_integrand_rho, 0, inf)[0]
+        elif option_type == 'put':
+            return -(0.5 * self.k * self.t) \
+                   * exp(-self.r * self.t) + \
+                   (self.t / pi) * integrate.quad(self.greek_integrand_rho, 0, inf)[0]
 
     def greek_volga_integrand(self, phi):
         (a, b_1, d_1, g_1, C_1, D_1, f_1) = self.characteristic_function(phi, 1)
@@ -201,8 +210,9 @@ class HestonModel:
         )
         return integrand_volga
 
-    def greek_volga(self):
-        return 1/pi * integrate.quad(self.greek_volga_integrand, 0, inf)[0]
+    def greek_volga(self, option_type):
+        if option_type == 'call' or 'put':
+            return 1/pi * integrate.quad(self.greek_volga_integrand, 0, inf)[0]
 
     def greek_vanna_integrand(self, phi):
         (a, b_1, d_1, g_1, C_1, D_1, f_1) = self.characteristic_function(phi, 1)
@@ -218,8 +228,9 @@ class HestonModel:
 
         return vanna_integrand
 
-    def greek_vanna(self):
-        return 1/pi * integrate.quad(self.greek_vanna_integrand, 0, inf)[0]
+    def greek_vanna(self, option_type):
+        if option_type == 'call' or 'put':
+            return 1/pi * integrate.quad(self.greek_vanna_integrand, 0, inf)[0]
 
     def dC_dt(self, phi, a, b, d, g):
 
@@ -260,18 +271,23 @@ class HestonModel:
             )
         )
 
-    def greek_theta(self):
+    def greek_theta(self, option_type):
         """
         Theta measures the sensitivity of the theoretical value of an option to a change in the time to maturity.
         :return: the change in the theoretical value of an option for a change in the time to maturity.
         """
-        return -(
-                self.k * self.r * exp(- self.r * self.t) / 2 +
-                (1/pi) * integrate.quad(self.theta_integrand, 0, inf)[0]
-        )
+        if option_type == 'call':
+            return -(
+                    self.k * self.r * exp(- self.r * self.t) / 2 +
+                    (1/pi) * integrate.quad(self.theta_integrand, 0, inf)[0]
+            )
+        elif option_type == 'put':
+            return (
+                    self.k * self.r * exp(- self.r * self.t) / 2 +
+                    (1 / pi) * integrate.quad(self.theta_integrand, 0, inf)[0]
+            )
 
 
-#  15/365
 hest = HestonModel(s=150,
                    k=155,
                    t=15/365,
