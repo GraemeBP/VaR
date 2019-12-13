@@ -4,7 +4,8 @@ from numpy import arange
 
 
 class GraphGreeksHeston:
-    def __init__(self, greek, initial_condition, model_parameter, start, finish, step, step_floats):
+    def __init__(self, greek, initial_condition, model_parameter, start, finish, step, step_floats, option_type):
+
         self.greek = greek
         self.s = initial_condition[0]
         self.k = initial_condition[1]
@@ -21,6 +22,8 @@ class GraphGreeksHeston:
         self.finish = finish
         self.step = step
         self.step_floats = step_floats
+
+        self.option_type = option_type
 
     def parameter_update(self, new_parameter_value):
         if self.model_parameter == "s":
@@ -54,19 +57,19 @@ class GraphGreeksHeston:
 
             heston_inputs = HestonModel(self.s, self.k, self.t, self.v, self.r, self.theta, self.kappa, self.sigma, self.rho)
             if self.greek == "delta":
-                greek_values.append(heston_inputs.greek_delta())
+                greek_values.append(heston_inputs.greek_delta(self.option_type))
             elif self.greek == "gamma":
-                greek_values.append(heston_inputs.greek_gamma())
+                greek_values.append(heston_inputs.greek_gamma(self.option_type))
             elif self.greek == "vega":
-                greek_values.append(heston_inputs.greek_vega())
+                greek_values.append(heston_inputs.greek_vega(self.option_type))
             elif self.greek == "rho":
-                greek_values.append(heston_inputs.greek_rho())
+                greek_values.append(heston_inputs.greek_rho(self.option_type))
             elif self.greek == "volga":
-                greek_values.append(heston_inputs.greek_volga())
+                greek_values.append(heston_inputs.greek_volga(self.option_type))
             elif self.greek == "vanna":
-                greek_values.append(heston_inputs.greek_vanna())
+                greek_values.append(heston_inputs.greek_vanna(self.option_type))
             elif self.greek == "theta":
-                greek_values.append(heston_inputs.greek_theta())
+                greek_values.append(heston_inputs.greek_theta(self.option_type))
 
         return new_parameter_value_list, greek_values
 
@@ -99,13 +102,14 @@ class GraphGreeksHeston:
 
 # HestonModel(s,      k,     t,     v,     r,  theta, kappa, sigma,   rho)
 hest_list = [154.08, 155, 15/365, 0.0105, 0.1, 0.0837, 74.32, 3.4532, -0.8912]
-Class_Test = GraphGreeksHeston(greek='theta',
+Class_Test = GraphGreeksHeston(greek='delta',
                                initial_condition=hest_list,
                                model_parameter='s',
                                start=120,
                                finish=190,
                                step=0.1,
-                               step_floats=1)
+                               step_floats=1,
+                               option_type='put')
 Class_Test.greek_plot()
 
 
