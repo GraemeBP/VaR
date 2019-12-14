@@ -39,23 +39,23 @@ Where P<sub>j</sub> and f<sub>j</sub> are the following:
 
 #### Define call value
 The value of a call is the following: 
-C = S * P<sub>1</sub> - Ke<sup>(-rt)</sup> * P<sub>2</sub> 
+U = S * P<sub>1</sub> - Ke<sup>(-rt)</sup> * P<sub>2</sub> 
 
 #### Define Gamma
-Gamma is the second derivative in the price of the call, C with respect the the change in the underlying price S.
+Gamma is the second derivative in the price of the call, U with respect the the change in the underlying price S.
 Since Delta is the first derivative, we can also look at Gamma as the first derivative of Delta with respect to S. 
 
-<a href="https://www.codecogs.com/eqnedit.php?latex=\frac{\partial^{2}&space;C}{\partial&space;S^{2}}&space;=&space;\frac{\partial&space;}{\partial&space;S}&space;(Delta)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\frac{\partial^{2}&space;C}{\partial&space;S^{2}}&space;=&space;\frac{\partial&space;}{\partial&space;S}&space;(Delta)" title="\frac{\partial^{2} C}{\partial S^{2}} = \frac{\partial }{\partial S} (Delta)" /></a>
+<a href="https://www.codecogs.com/eqnedit.php?latex=\frac{\partial^{2}&space;U}{\partial&space;S^{2}}&space;=&space;\frac{\partial&space;}{\partial&space;S}&space;(Delta)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\frac{\partial^{2}&space;U}{\partial&space;S^{2}}&space;=&space;\frac{\partial&space;}{\partial&space;S}&space;(Delta)" title="\frac{\partial^{2} U}{\partial S^{2}} = \frac{\partial }{\partial S} (Delta)" /></a>
 
 Subbing in the final value of delta solved above: 
 
-<a href="https://www.codecogs.com/eqnedit.php?latex=\frac{\partial^{2}&space;C}{\partial&space;S^{2}}&space;=&space;\frac{\partial&space;}{\partial&space;S}&space;(\frac{1}{2}&space;&plus;&space;\frac{1}{\pi}&space;\int_{0}^{\infty}&space;Re(e^{-i\phi&space;ln(K)}&space;((1&plus;\frac{1}{i\phi})f_{i}&space;-&space;\frac{Ke^{-rt}}{S}f_{2}))d\phi)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\frac{\partial^{2}&space;C}{\partial&space;S^{2}}&space;=&space;\frac{\partial&space;}{\partial&space;S}&space;(\frac{1}{2}&space;&plus;&space;\frac{1}{\pi}&space;\int_{0}^{\infty}&space;Re(e^{-i\phi&space;ln(K)}&space;((1&plus;\frac{1}{i\phi})f_{i}&space;-&space;\frac{Ke^{-rt}}{S}f_{2}))d\phi)" title="\frac{\partial^{2} C}{\partial S^{2}} = \frac{\partial }{\partial S} (\frac{1}{2} + \frac{1}{\pi} \int_{0}^{\infty} Re(e^{-i\phi ln(K)} ((1+\frac{1}{i\phi})f_{i} - \frac{Ke^{-rt}}{S}f_{2}))d\phi)" /></a>
+<a href="https://www.codecogs.com/eqnedit.php?latex=\frac{\partial^{2}&space;U}{\partial&space;S^{2}}&space;=&space;\frac{\partial&space;}{\partial&space;S}&space;(\frac{1}{2}&space;&plus;&space;\frac{1}{\pi}&space;\int_{0}^{\infty}&space;Re(e^{-i\phi&space;ln(K)}&space;((1&plus;\frac{1}{i\phi})f_{i}&space;-&space;\frac{Ke^{-rt}}{S}f_{2}))d\phi)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\frac{\partial^{2}&space;U}{\partial&space;S^{2}}&space;=&space;\frac{\partial&space;}{\partial&space;S}&space;(\frac{1}{2}&space;&plus;&space;\frac{1}{\pi}&space;\int_{0}^{\infty}&space;Re(e^{-i\phi&space;ln(K)}&space;((1&plus;\frac{1}{i\phi})f_{i}&space;-&space;\frac{Ke^{-rt}}{S}f_{2}))d\phi)" title="\frac{\partial^{2} U}{\partial S^{2}} = \frac{\partial }{\partial S} (\frac{1}{2} + \frac{1}{\pi} \int_{0}^{\infty} Re(e^{-i\phi ln(K)} ((1+\frac{1}{i\phi})f_{i} - \frac{Ke^{-rt}}{S}f_{2}))d\phi)" /></a>
 
 #### Get derivative of f<sub>j</sub> wrt S
 <a href="https://www.codecogs.com/eqnedit.php?latex=\frac{\partial&space;f_{j}}{\partial&space;S}&space;=&space;\frac{i\phi&space;}{S}&space;f_{j}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\frac{\partial&space;f_{j}}{\partial&space;S}&space;=&space;\frac{i\phi&space;}{S}&space;f_{j}" title="\frac{\partial f_{j}}{\partial S} = \frac{i\phi }{S} f_{j}" /></a>
 
 #### Differentiate 
-<a href="https://www.codecogs.com/eqnedit.php?latex=\frac{\partial^{2}&space;C}{\partial&space;S^{2}}&space;=&space;(\frac{1}{\pi}&space;\int_{0}^{\infty}&space;Re(e^{-i\phi&space;ln(K)}&space;((1&plus;\frac{1}{i\phi})f_{i}*\frac{i\phi}{S}&space;-&space;\frac{Ke^{-rt}}{S}f_{2}*\frac{i\phi}{S}&plus;&space;\frac{Ke^{-rt}}{S^2}f_{2}))d\phi)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\frac{\partial^{2}&space;C}{\partial&space;S^{2}}&space;=&space;(\frac{1}{\pi}&space;\int_{0}^{\infty}&space;Re(e^{-i\phi&space;ln(K)}&space;((1&plus;\frac{1}{i\phi})f_{i}*\frac{i\phi}{S}&space;-&space;\frac{Ke^{-rt}}{S}f_{2}*\frac{i\phi}{S}&plus;&space;\frac{Ke^{-rt}}{S^2}f_{2}))d\phi)" title="\frac{\partial^{2} C}{\partial S^{2}} = (\frac{1}{\pi} \int_{0}^{\infty} Re(e^{-i\phi ln(K)} ((1+\frac{1}{i\phi})f_{i}*\frac{i\phi}{S} - \frac{Ke^{-rt}}{S}f_{2}*\frac{i\phi}{S}+ \frac{Ke^{-rt}}{S^2}f_{2}))d\phi)" /></a>
+<a href="https://www.codecogs.com/eqnedit.php?latex=\frac{\partial^{2}&space;U}{\partial&space;S^{2}}&space;=&space;(\frac{1}{\pi}&space;\int_{0}^{\infty}&space;Re(e^{-i\phi&space;ln(K)}&space;((1&plus;\frac{1}{i\phi})f_{i}*\frac{i\phi}{S}&space;-&space;\frac{Ke^{-rt}}{S}f_{2}*\frac{i\phi}{S}&plus;&space;\frac{Ke^{-rt}}{S^2}f_{2}))d\phi)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\frac{\partial^{2}&space;U}{\partial&space;S^{2}}&space;=&space;(\frac{1}{\pi}&space;\int_{0}^{\infty}&space;Re(e^{-i\phi&space;ln(K)}&space;((1&plus;\frac{1}{i\phi})f_{i}*\frac{i\phi}{S}&space;-&space;\frac{Ke^{-rt}}{S}f_{2}*\frac{i\phi}{S}&plus;&space;\frac{Ke^{-rt}}{S^2}f_{2}))d\phi)" title="\frac{\partial^{2} U}{\partial S^{2}} = (\frac{1}{\pi} \int_{0}^{\infty} Re(e^{-i\phi ln(K)} ((1+\frac{1}{i\phi})f_{i}*\frac{i\phi}{S} - \frac{Ke^{-rt}}{S}f_{2}*\frac{i\phi}{S}+ \frac{Ke^{-rt}}{S^2}f_{2}))d\phi)" /></a>
 
 #### We can then simplify the equation
 
