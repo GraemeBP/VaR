@@ -101,3 +101,7 @@ Rho is the  derivative of the price of the call option, U with respect the the c
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=\frac{\partial&space;P_j}{\partial&space;r}&space;=&space;\frac{1}{\pi}&space;\int_{0}^{\infty}&space;Re(e^{-i&space;\phi&space;ln(K)}f_j&space;t)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\frac{\partial&space;P_j}{\partial&space;r}&space;=&space;\frac{1}{\pi}&space;\int_{0}^{\infty}&space;Re(e^{-i&space;\phi&space;ln(K)}f_j&space;t)" title="\frac{\partial P_j}{\partial r} = \frac{1}{\pi} \int_{0}^{\infty} Re(e^{-i \phi ln(K)}f_j t)" /></a>
 
+
+#### Subbing these in and rearranging gets Rho: 
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=Rho&space;=&space;\frac{\partial&space;U}{\partial&space;r}&space;=&space;\frac{1}{2}Ke^{-rt}t&space;&plus;&space;\frac{t}{\pi}&space;\int_{0}^{\infty}&space;Re(e^{-i&space;\phi&space;ln(K)}(S*f_1&space;-Ke^{-rt}(\frac{1}{i&space;\phi}&plus;1)f_2))d&space;\phi" target="_blank"><img src="https://latex.codecogs.com/gif.latex?Rho&space;=&space;\frac{\partial&space;U}{\partial&space;r}&space;=&space;\frac{1}{2}Ke^{-rt}t&space;&plus;&space;\frac{t}{\pi}&space;\int_{0}^{\infty}&space;Re(e^{-i&space;\phi&space;ln(K)}(S*f_1&space;-Ke^{-rt}(\frac{1}{i&space;\phi}&plus;1)f_2))d&space;\phi" title="Rho = \frac{\partial U}{\partial r} = \frac{1}{2}Ke^{-rt}t + \frac{t}{\pi} \int_{0}^{\infty} Re(e^{-i \phi ln(K)}(S*f_1 -Ke^{-rt}(\frac{1}{i \phi}+1)f_2))d \phi" /></a>
