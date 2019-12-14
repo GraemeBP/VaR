@@ -20,7 +20,7 @@ We can rearrange it to the following:
 #### Define P<sub>j</sub> and f<sub>j</sub>
 Where P<sub>j</sub> and f<sub>j</sub> are the following: 
 
-<a href="https://www.codecogs.com/eqnedit.php?latex=P_{j}&space;=&space;\frac{1}{2}&space;&plus;&space;\frac{1}{\pi}&space;*&space;\int_{0}^{\infty&space;}&space;Re&space;(\frac{e^{-i\phi&space;ln(K))}*f_{j}}{i\phi&space;}&space;)d\phi" target="_blank"><img src="https://latex.codecogs.com/gif.latex?P_{j}&space;=&space;\frac{1}{2}&space;&plus;&space;\frac{1}{\pi}&space;*&space;\int_{0}^{\infty&space;}&space;Re&space;(\frac{e^{-i\phi&space;ln(K))}*f_{j}}{i\phi&space;}&space;)d\phi" title="P_{j} = \frac{1}{2} + \frac{1}{\pi} * \int_{0}^{\infty } Re (\frac{e^{-i\phi ln(K))}*f_{j}}{i\phi } )d\phi" /></a>
+<a href="https://www.codecogs.com/eqnedit.php?latex=P_{j}&space;=&space;\frac{1}{2}&space;&plus;&space;\frac{1}{\pi}&space;*&space;\int_{0}^{\infty&space;}&space;Re&space;(\frac{e^{-i\phi&space;ln(K)}*f_{j}}{i\phi&space;}&space;)d\phi" target="_blank"><img src="https://latex.codecogs.com/gif.latex?P_{j}&space;=&space;\frac{1}{2}&space;&plus;&space;\frac{1}{\pi}&space;*&space;\int_{0}^{\infty&space;}&space;Re&space;(\frac{e^{-i\phi&space;ln(K)}*f_{j}}{i\phi&space;}&space;)d\phi" title="P_{j} = \frac{1}{2} + \frac{1}{\pi} * \int_{0}^{\infty } Re (\frac{e^{-i\phi ln(K)}*f_{j}}{i\phi } )d\phi" /></a>
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=f_{j}&space;=&space;e^{C&space;&plus;&space;D.v&space;&plus;&space;ln(S)\phi&space;i&space;}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?f_{j}&space;=&space;e^{C&space;&plus;&space;D.v&space;&plus;&space;ln(S)\phi&space;i&space;}" title="f_{j} = e^{C + D.v + ln(S)\phi i }" /></a>
 
