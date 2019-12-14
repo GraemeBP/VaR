@@ -61,3 +61,22 @@ Subbing in the final value of delta solved above:
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=Gamma=&space;(\frac{1}{\pi}&space;\int_{0}^{\infty}&space;Re(e^{-i\phi&space;ln(K)}&space;((1&plus;i\phi)f_{i}*\frac{1}{S}&space;&plus;&space;\frac{Ke^{-rt}}{S^2}f_{2}*(1-i\phi)))d\phi)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?Gamma=&space;(\frac{1}{\pi}&space;\int_{0}^{\infty}&space;Re(e^{-i\phi&space;ln(K)}&space;((1&plus;i\phi)f_{i}*\frac{1}{S}&space;&plus;&space;\frac{Ke^{-rt}}{S^2}f_{2}*(1-i\phi)))d\phi)" title="Gamma= (\frac{1}{\pi} \int_{0}^{\infty} Re(e^{-i\phi ln(K)} ((1+i\phi)f_{i}*\frac{1}{S} + \frac{Ke^{-rt}}{S^2}f_{2}*(1-i\phi)))d\phi)" /></a>
 
+## Vega
+
+#### Define Vega
+Vega is the  derivative of the price of the call option, C with respect the the change in the underlying volatility.
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=Vega&space;=&space;\frac{\partial&space;C}{\partial&space;V}&space;=&space;\frac{\partial&space;}{\partial&space;V}&space;(S*P_{1}&space;-&space;Ke^{-rt}*P_{2})" target="_blank"><img src="https://latex.codecogs.com/gif.latex?Vega&space;=&space;\frac{\partial&space;C}{\partial&space;V}&space;=&space;\frac{\partial&space;}{\partial&space;V}&space;(S*P_{1}&space;-&space;Ke^{-rt}*P_{2})" title="Vega = \frac{\partial C}{\partial V} = \frac{\partial }{\partial V} (S*P_{1} - Ke^{-rt}*P_{2})" /></a>
+
+#### Get derivative of P<sub>j</sub> and f<sub>j</sub> wrt v
+<a href="https://www.codecogs.com/eqnedit.php?latex=\frac{\partial&space;f}{\partial&space;V}&space;=&space;D&space;*&space;f_{j}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\frac{\partial&space;f}{\partial&space;V}&space;=&space;D&space;*&space;f_{j}" title="\frac{\partial f}{\partial V} = D * f_{j}" /></a>
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=\frac{\partial&space;P_{j}}{\partial&space;V}&space;=&space;\frac{1}{\pi}\int_{0}^{\infty}&space;Re&space;(\frac{e^{-i\phi&space;ln(K)}}{i\phi}Df_{j})d\phi" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\frac{\partial&space;P_{j}}{\partial&space;V}&space;=&space;\frac{1}{\pi}\int_{0}^{\infty}&space;Re&space;(\frac{e^{-i\phi&space;ln(K)}}{i\phi}Df_{j})d\phi" title="\frac{\partial P_{j}}{\partial V} = \frac{1}{\pi}\int_{0}^{\infty} Re (\frac{e^{-i\phi ln(K)}}{i\phi}Df_{j})d\phi" /></a>
+
+#### Subbing these into Vega formula 
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=\frac{\partial&space;C}{\partial&space;V}&space;=&space;\frac{S}{\pi}\int_{0}^{\infty}&space;Re&space;(\frac{e^{-i\phi&space;ln(K)}}{i\phi}D_{1}f_{1})d\phi&space;-&space;\frac{Ke^{-rt}}{\pi}\int_{0}^{\infty}&space;Re&space;(\frac{e^{-i\phi&space;ln(K)}}{i\phi}D_{2}f_{2})d\phi" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\frac{\partial&space;C}{\partial&space;V}&space;=&space;\frac{S}{\pi}\int_{0}^{\infty}&space;Re&space;(\frac{e^{-i\phi&space;ln(K)}}{i\phi}D_{1}f_{1})d\phi&space;-&space;\frac{Ke^{-rt}}{\pi}\int_{0}^{\infty}&space;Re&space;(\frac{e^{-i\phi&space;ln(K)}}{i\phi}D_{2}f_{2})d\phi" title="\frac{\partial C}{\partial V} = \frac{S}{\pi}\int_{0}^{\infty} Re (\frac{e^{-i\phi ln(K)}}{i\phi}D_{1}f_{1})d\phi - \frac{Ke^{-rt}}{\pi}\int_{0}^{\infty} Re (\frac{e^{-i\phi ln(K)}}{i\phi}D_{2}f_{2})d\phi" /></a>
+
+#### We can then simplify the formula 
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=Vega&space;=&space;\frac{\partial&space;C}{\partial&space;V}&space;=&space;\frac{1}{\pi}\int_{0}^{\infty}&space;Re&space;(\frac{e^{-i\phi&space;ln(K)}}{i\phi}&space;*&space;(D_{1}*f_{1}*S&space;-&space;D_{2}*f_{2}*Ke^{-rt}))d\phi" target="_blank"><img src="https://latex.codecogs.com/gif.latex?Vega&space;=&space;\frac{\partial&space;C}{\partial&space;V}&space;=&space;\frac{1}{\pi}\int_{0}^{\infty}&space;Re&space;(\frac{e^{-i\phi&space;ln(K)}}{i\phi}&space;*&space;(D_{1}*f_{1}*S&space;-&space;D_{2}*f_{2}*Ke^{-rt}))d\phi" title="Vega = \frac{\partial C}{\partial V} = \frac{1}{\pi}\int_{0}^{\infty} Re (\frac{e^{-i\phi ln(K)}}{i\phi} * (D_{1}*f_{1}*S - D_{2}*f_{2}*Ke^{-rt}))d\phi" /></a>
