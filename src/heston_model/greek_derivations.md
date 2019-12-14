@@ -80,3 +80,24 @@ Vega is the  derivative of the price of the call option, C with respect the the 
 #### We can then simplify the formula 
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=Vega&space;=&space;\frac{\partial&space;C}{\partial&space;V}&space;=&space;\frac{1}{\pi}\int_{0}^{\infty}&space;Re&space;(\frac{e^{-i\phi&space;ln(K)}}{i\phi}&space;*&space;(D_{1}*f_{1}*S&space;-&space;D_{2}*f_{2}*Ke^{-rt}))d\phi" target="_blank"><img src="https://latex.codecogs.com/gif.latex?Vega&space;=&space;\frac{\partial&space;C}{\partial&space;V}&space;=&space;\frac{1}{\pi}\int_{0}^{\infty}&space;Re&space;(\frac{e^{-i\phi&space;ln(K)}}{i\phi}&space;*&space;(D_{1}*f_{1}*S&space;-&space;D_{2}*f_{2}*Ke^{-rt}))d\phi" title="Vega = \frac{\partial C}{\partial V} = \frac{1}{\pi}\int_{0}^{\infty} Re (\frac{e^{-i\phi ln(K)}}{i\phi} * (D_{1}*f_{1}*S - D_{2}*f_{2}*Ke^{-rt}))d\phi" /></a>
+
+## Rho 
+
+#### Define Rho 
+
+Rho is the  derivative of the price of the call option, C with respect the the change in the underlying interest rate.
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=Rho=&space;\frac{\partial&space;C}{\partial&space;r}&space;=&space;\frac{\partial&space;}{\partial&space;r}&space;(S*P_1&space;-&space;Ke^{-rt}P_2)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?Rho=&space;\frac{\partial&space;C}{\partial&space;r}&space;=&space;\frac{\partial&space;}{\partial&space;r}&space;(S*P_1&space;-&space;Ke^{-rt}P_2)" title="Rho= \frac{\partial C}{\partial r} = \frac{\partial }{\partial r} (S*P_1 - Ke^{-rt}P_2)" /></a>
+
+#### We know what P<sub>j</sub> and f<sub>j</sub> are from above, however interest rate is also apart of C (not the call) within f<sub>j</sub>. C is defined as the following:
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=C&space;=&space;r&space;\phi&space;i&space;t&space;&plus;&space;\frac{\alpha&space;}{\sigma&space;^2}(b_j&space;-&space;\rho&space;\sigma&space;\phi&space;i)t&space;-&space;2ln(\frac{1-ge^{-dt}}{1-g})" target="_blank"><img src="https://latex.codecogs.com/gif.latex?C&space;=&space;r&space;\phi&space;i&space;t&space;&plus;&space;\frac{\alpha&space;}{\sigma&space;^2}(b_j&space;-&space;\rho&space;\sigma&space;\phi&space;i)t&space;-&space;2ln(\frac{1-ge^{-dt}}{1-g})" title="C = r \phi i t + \frac{\alpha }{\sigma ^2}(b_j - \rho \sigma \phi i)t - 2ln(\frac{1-ge^{-dt}}{1-g})" /></a>
+
+#### Now lets get the derivatives of C, P<sub>j</sub> and f<sub>j</sub>
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=\frac{\partial&space;C}{\partial&space;r}&space;=&space;\phi&space;it" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\frac{\partial&space;C}{\partial&space;r}&space;=&space;\phi&space;it" title="\frac{\partial C}{\partial r} = \phi it" /></a>
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=\frac{\partial&space;f_j}{\partial&space;r}&space;=&space;\phi&space;i&space;t&space;f_j" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\frac{\partial&space;f_j}{\partial&space;r}&space;=&space;\phi&space;i&space;t&space;f_j" title="\frac{\partial f_j}{\partial r} = \phi i t f_j" /></a>
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=\frac{\partial&space;P_j}{\partial&space;r}&space;=&space;\frac{1}{\pi}&space;\int_{0}^{\infty}&space;Re(e^{-i&space;\phi&space;ln(K)}f_j&space;t)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\frac{\partial&space;P_j}{\partial&space;r}&space;=&space;\frac{1}{\pi}&space;\int_{0}^{\infty}&space;Re(e^{-i&space;\phi&space;ln(K)}f_j&space;t)" title="\frac{\partial P_j}{\partial r} = \frac{1}{\pi} \int_{0}^{\infty} Re(e^{-i \phi ln(K)}f_j t)" /></a>
+
