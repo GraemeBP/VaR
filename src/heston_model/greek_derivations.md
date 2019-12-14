@@ -6,7 +6,7 @@ The purpose of this document is to go through the derivation process of the gree
 
 #### Define call value
 The value of a call is the following: 
-C = S * P<sub>1</sub> - Ke<sup>(-rt)</sup> 
+C = S * P<sub>1</sub> - Ke<sup>(-rt)</sup> * P<sub>2</sub> 
 
 #### Define Delta
 Delta is the change in the price of the call, C with respect the the change in the underlying price S.
