@@ -28,7 +28,7 @@ Where P<sub>j</sub> and f<sub>j</sub> are the following:
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=\frac{\partial&space;f_{j}}{\partial&space;S}&space;=&space;\frac{i\phi&space;}{S}&space;f_{j}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\frac{\partial&space;f_{j}}{\partial&space;S}&space;=&space;\frac{i\phi&space;}{S}&space;f_{j}" title="\frac{\partial f_{j}}{\partial S} = \frac{i\phi }{S} f_{j}" /></a>
 
-<a href="https://www.codecogs.com/eqnedit.php?latex=\frac{\partial&space;P_{j}}{\partial&space;S}&space;=&space;\frac{1}{\pi}&space;\int_{0}^{\infty}&space;Re(\frac{e^{-i&space;\phi&space;ln(K))&space;}f_{j}}{S})" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\frac{\partial&space;P_{j}}{\partial&space;S}&space;=&space;\frac{1}{\pi}&space;\int_{0}^{\infty}&space;Re(\frac{e^{-i&space;\phi&space;ln(K))&space;}f_{j}}{S})" title="\frac{\partial P_{j}}{\partial S} = \frac{1}{\pi} \int_{0}^{\infty} Re(\frac{e^{-i \phi ln(K)) }f_{j}}{S})" /></a>
+<a href="https://www.codecogs.com/eqnedit.php?latex=\frac{\partial&space;P_{j}}{\partial&space;S}&space;=&space;\frac{1}{\pi}&space;\int_{0}^{\infty}&space;Re(\frac{e^{-i&space;\phi&space;ln(K)&space;}f_{j}}{S})" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\frac{\partial&space;P_{j}}{\partial&space;S}&space;=&space;\frac{1}{\pi}&space;\int_{0}^{\infty}&space;Re(\frac{e^{-i&space;\phi&space;ln(K)&space;}f_{j}}{S})" title="\frac{\partial P_{j}}{\partial S} = \frac{1}{\pi} \int_{0}^{\infty} Re(\frac{e^{-i \phi ln(K) }f_{j}}{S})" /></a>
 
 #### Subbing in the derivatives of P<sub>j</sub> and f<sub>j</sub> 
 
