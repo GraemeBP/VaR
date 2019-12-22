@@ -1,9 +1,8 @@
 from src.processes.heston_process import HestonProcess
 from numpy import mean, exp, maximum
 
+
 class DiffusionHestonModel:
-
-
     def __init__(self, s, k, t, v, r, theta, kappa, sigma, rho):
         """
         :param s: stock price
@@ -43,15 +42,16 @@ class DiffusionHestonModel:
         elif option_type == 'put':
             return mean((maximum(expected_value - self.k, 0)) * exp(-self.r * self.t), axis=0)
 
+
 hest = DiffusionHestonModel(s=150,
-                   k=155,
-                   t=15/365,
-                   v=0.0105,
-                   r=0.1,
-                   theta=0.0837,
-                   kappa=74.32,
-                   sigma=3.4532,
-                   rho=-0.8912)
+                            k=155,
+                            t=15/365,
+                            v=0.0105,
+                            r=0.1,
+                            theta=0.0837,
+                            kappa=74.32,
+                            sigma=3.4532,
+                            rho=-0.8912)
 
 
 
