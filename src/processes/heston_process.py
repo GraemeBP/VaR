@@ -1,6 +1,4 @@
-from numpy import zeros, random, sqrt, arange, abs
-import matplotlib.pyplot as plt
-
+from numpy import zeros, random, sqrt
 
 class HestonProcess:
 
@@ -51,7 +49,7 @@ class HestonProcess:
                           self.r * self.s * dt + \
                           self.sigma * sqrt(v[:, i + 1]) * w2[:, i]
 
-        return s, v, w1, w2
+        return s, v
 
 
 hest = HestonProcess(s=150,
