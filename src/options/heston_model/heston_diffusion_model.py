@@ -1,5 +1,6 @@
 from src.processes.heston_process import HestonProcess
-from numpy import mean, exp, maximum
+from numpy import mean, exp, maximum, arange
+from matplotlib import pyplot as plt
 
 
 class DiffusionHestonModel:
@@ -25,7 +26,7 @@ class DiffusionHestonModel:
         self.sigma = sigma
         self.rho = rho
 
-    def diffusion_model(self, simulations, time_step, option_type):
+    def diffusion_model(self, simulations, time_steps, option_type, graph='No'):
         model_inputs = HestonProcess(s=self.s,
                                      k=self.k,
                                      t=self.t,
@@ -35,12 +36,36 @@ class DiffusionHestonModel:
                                      kappa=self.kappa,
                                      sigma=self.sigma,
                                      rho=self.rho)
-        (s, v) = model_inputs.diffusion(simulations, time_step)
-        expected_value = s[time_step-1]
+        (s, v) = model_inputs.diffusion(simulations, time_steps)
+
+        if graph == 'Yes':
+            plt.figure()
+            plt.plot(arange(0, self.t * 365, self.t / time_steps * 365), mean(s, axis=0), label='Stock Price')
+            plt.legend()
+            plt.ylabel("Stock Price")
+            plt.xlabel("Time (Days)")
+            plt.title("Heston's Stock Price Diffusion")
+            plt.grid()
+            plt.show()
+
+            plt.figure()
+            plt.plot(arange(0, self.t * 365, self.t / time_steps * 365), mean(v, axis=0), label='Volatility')
+            plt.legend()
+            plt.ylabel("Volatility")
+            plt.xlabel("Time (Days)")
+            plt.title("Heston Volatility Diffusion")
+            plt.grid()
+            plt.show()
+
+
+        expected_value = s[time_steps-1]
         if option_type == 'call':
             return mean((maximum(expected_value - self.k, 0)) * exp(-self.r * self.t), axis=0)
         elif option_type == 'put':
             return mean((maximum(expected_value - self.k, 0)) * exp(-self.r * self.t), axis=0)
+
+
+
 
 
 hest = DiffusionHestonModel(s=150,
