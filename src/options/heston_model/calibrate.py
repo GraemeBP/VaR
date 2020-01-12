@@ -1,10 +1,10 @@
-from scipy.optimize import minimize
+from scipy.optimize import minimize, differential_evolution
 from src.options.heston_model.heston_model import HestonModel
 from numpy import array
 
 
 class CalibrateHeston:
-    def __init__(self, initial_guess, bounds, known):
+    def __init__(self, initial_guess, bounds, known, optmisation_type):
         """
             :param v: volatility
             :param theta: long run average volatility (vbar)
@@ -16,6 +16,7 @@ class CalibrateHeston:
         self.initial_guess = initial_guess
         self.bounds = bounds
         self.known = known
+        self.optimisation_type = optmisation_type
 
     def objective(self, guess):
         # HestonModel(s, k, t, v, r, theta, kappa, sigma, rho)
@@ -37,12 +38,23 @@ class CalibrateHeston:
         result = minimize(self.objective, self.initial_guess, bounds=self.bounds)
         return result
 
+    def global_optimisation(self):
+        result = differential_evolution(self.objective, self.bounds)
+        return result
+
+    def run_optimisation(self):
+        if self.optimisation_type == 'local':
+            return self.local_optimisation()
+        elif self.optimisation_type == 'global':
+            return self.global_optimisation()
+        else:
+            return print('Optimisation type should be local or global')
 
 # initial_guess(v, theta, kappa, sigma, rho)
 initial_guess = array([0.09, 0.295, 0.9, 0.7, -0.2])
 bounds = array([(0, 1), (0, 1), (0, 5), (0, 5), (-1, 1)])
-# known = array([328.29, 275, 0.1753424, 0.000553778, 56.9])
-known = array([[328.29, 275, 0.1753424, 0.000553778, 56.9], [328.29, 300, 0.1753424, 0.000553778, 36.3]])
+known = array([328.29, 275, 0.1753424, 0.000553778, 56.9])
+# known = array([[328.29, 275, 0.1753424, 0.000553778, 56.9], [328.29, 300, 0.1753424, 0.000553778, 36.3]])
 
-cali = CalibrateHeston(initial_guess, bounds, known)
-output = cali.local_optimisation()
+cali = CalibrateHeston(initial_guess, bounds, known, 'global')
+output = cali.run_optimisation()
