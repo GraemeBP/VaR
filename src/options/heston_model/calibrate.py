@@ -2,10 +2,11 @@ from scipy.optimize import minimize, differential_evolution
 from src.options.heston_model.heston_model import HestonModel
 from numpy import array
 import pandas as pd
-
+import matplotlib.pyplot as plt
+from mpl_toolkits import mplot3d
 
 class CalibrateHeston:
-    def __init__(self, initial_guess, bounds, known, optmisation_type):
+    def __init__(self, initial_guess, bounds, known, optmisation_type, graph="n"):
         """
             :param v: volatility
             :param theta: long run average volatility (vbar)
@@ -22,7 +23,7 @@ class CalibrateHeston:
         self.initial_guess = initial_guess
         self.bounds = bounds
         self.optimisation_type = optmisation_type
-
+        self.graph = graph
     def objective(self, guess):
         sum_of_relative_difference = 0
         # HestonModel(s, k, t, v, r, theta, kappa, sigma, rho)
@@ -53,11 +54,40 @@ class CalibrateHeston:
         result = differential_evolution(self.objective, self.bounds)
         return result
 
+    def graph_output(self, result):
+
+        [v_calibrated, theta_calibrated, kappa_calibrated, sigma_calibrated, rho_calibrated] = result.x
+
+        call_price = []
+        strike_price = []
+        maturity = []
+
+        for i in range(0, 4):
+
+            heston = HestonModel(self.known_s[i], self.known_k[i], self.known_t[i], v_calibrated, self.known_r[i],
+                                 theta_calibrated, kappa_calibrated, sigma_calibrated, rho_calibrated)
+
+            call_price.append(heston.european_call())
+            strike_price.append(self.known_k[i])
+            maturity.append(self.known_t[i])
+
+            print(call_price)
+
+        fig = plt.axes(projection='3d')
+        fig.plot3D(strike_price, maturity, call_price, 'gray')
+
     def run_optimisation(self):
         if self.optimisation_type == 'local':
-            return self.local_optimisation()
+
+            result = self.local_optimisation()
+            if self.graph == "y":
+                self.graph_output(result)
+            return result
         elif self.optimisation_type == 'global':
-            return self.global_optimisation()
+            result = self.global_optimisation()
+            if self.graph == "y":
+                self.graph_output(result)
+            return result
         else:
             return print('Optimisation type should be local or global')
 
@@ -69,5 +99,5 @@ bounds = array([(0, 1), (0, 1), (0, 5), (0, 5), (-1, 1)])
 known = pd.read_excel(r"C:\Users\rp413vx\PycharmProjects\VaR_NEW\data\Heston_Calibration_Data.xlsx",sheet_name="Data")
 
 
-cali = CalibrateHeston(initial_guess, bounds, known, 'local')
+cali = CalibrateHeston(initial_guess, bounds, known, 'local', graph='y')
 output = cali.run_optimisation()
