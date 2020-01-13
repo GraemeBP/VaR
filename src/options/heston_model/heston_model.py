@@ -1,7 +1,6 @@
 from numpy import real, exp, sqrt, log, pi, inf
 import scipy.integrate as integrate
 
-
 class HestonModel:
 
     def __init__(self, s, k, t, v, r, theta, kappa, sigma, rho):
@@ -288,7 +287,7 @@ class HestonModel:
             )
 
 
-hest = HestonModel(s=150,
+hest11 = HestonModel(s=150,
                    k=155,
                    t=15/365,
                    v=0.0105,
